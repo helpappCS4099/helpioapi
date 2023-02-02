@@ -30,8 +30,9 @@ function initial() {
 }
 
 //--------------ROUTES------------------
-
-
+require("./api/routes/auth.routes")(app)
+require("./api/routes/user.routes")(app)
+require("./api/routes/helprequest.routes")(app)
 
 var server = http.createServer(app)
 
