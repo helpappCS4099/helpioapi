@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "coverage": "nyc --reporter=text npm test"
   },
   "repository": {
     "type": "git",
@@ -20,11 +21,16 @@
   "devDependencies": {
     "install": "^0.13.0",
     "nodemon": "^1.19.4",
-    "npm": "^9.4.0"
+    "npm": "^9.4.0",
+    "nyc": "^15.1.0",
+    "supertest": "^6.3.3"
   },
   "dependencies": {
+    "chai": "^4.3.7",
     "express": "^4.18.2",
     "express-healthcheck": "^0.1.0",
-    "mongoose": "^5.13.15"
+    "mocha": "^10.2.0",
+    "mongoose": "^5.13.15",
+    "nodemailer": "^6.9.1"
   }
 }
