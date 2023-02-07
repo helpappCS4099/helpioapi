@@ -4,9 +4,9 @@
   "description": "An API for the Help Application, as a part of the Senior Honours Project.",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "NODE_ENV=test mocha ./test/index.tests.js --exit --delay",
     "start": "nodemon server.js",
-    "coverage": "nyc --reporter=text npm test"
+    "coverage": "nyc report --reporter=lcov npm test"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
   "homepage": "https://github.com/helpappCS4099/helpioapi#readme",
   "devDependencies": {
     "install": "^0.13.0",
+    "mongodb-memory-server": "^8.11.4",
     "nodemon": "^1.19.4",
     "npm": "^9.4.0",
     "nyc": "^15.1.0",

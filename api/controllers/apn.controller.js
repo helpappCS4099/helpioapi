@@ -1,9 +1,10 @@
 var apn = require("apn")
 const apnConfig = require("../../config/apn.config")
+var join = require('path').join
 
 var options = {
     token: {
-        key: apnConfig.key,
+        key: join(__dirname, apnConfig.keyPath),
         keyId: apnConfig.keyId,
         teamId: apnConfig.teamId
     },
@@ -14,4 +15,8 @@ var options = {
     production: false
 }
 
-export var apnProvider = new apn.Provider(options)
+exports.apnProvider = new apn.Provider(options)
+
+exports.updateAPNToken = (req, res) => {
+    
+}

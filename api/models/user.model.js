@@ -6,6 +6,8 @@ const User = mongoose.model(
         deviceToken: String,
         email: String,
         passwordHash: String,
+        firstName: String,
+        lastName: String,
         verified: Boolean,
         friends: [
             {

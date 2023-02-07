@@ -1,4 +1,5 @@
 const controller = require("../controllers/auth.controller")
+const apnController = require("../controllers/apn.controller")
 
 module.exports = function(app) {
     app.use(function(req,res,next) {
@@ -9,9 +10,12 @@ module.exports = function(app) {
         next()
     })
 
-    app.post("/users", [], controller.login)
-    app.post("/users/new", [], controller.createUser)
+    app.post("/login", [], controller.login)
+    app.get("/logout", [], controller.logout)
+    app.post("/users", [], controller.createUser)
     app.get("/users/email", [], controller.checkEmail)
-    app.get("/users/verify/:hash", [], controller.verifyEmail)
-    app.get("/users/logout", [], controller.logout)
+    app.get("/verification/:hash", [], controller.verifyEmail)
+    app.post("/verification", [], controller.resendVerificationEmail)
+    app.get("/verification", [], controller.queryVerificationStatus)
+    app.post("/apntoken", [], apnController.updateAPNToken)
 }

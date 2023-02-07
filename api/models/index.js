@@ -7,5 +7,6 @@ db.mongoose = mongoose
 
 db.user = require("./user.model")
 db.helprequest = require("./helprequest.model")
+db.verificationHash = require("./verificationHash.model")
 
 module.exports = db

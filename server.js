@@ -2,42 +2,30 @@ const express = require('express') // Call express
 const http = require('http')
 const db = require("./api/models")
 const dbConfig = require('./config/db.config')
+const { connectDB } = require('./database')
 
-const app = express()
+var server = null;
 
-// parse requests of content-type - application/json
-app.use(express.json());
-
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: true }));
-
-db.mongoose
-    .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    })
-    .then(()=> {
-        console.log("Successfully connected to MongoDB")
-        initial()
-    })
-    .catch(err=> {
-        console.error("Connection Error", err)
-        process.exit()
-    })
-
-function initial() {
-    //setup upon load
+async function makeServerApp() {
+    var app = express()
+    app.use(express.json())
+    app.use(express.urlencoded({ extended: true }))
+    //--------------ROUTES------------------
+    require("./api/routes/auth.routes")(app)
+    require("./api/routes/user.routes")(app)
+    require("./api/routes/helprequest.routes")(app)
+    await connectDB()
+    server = http.createServer(app)
+    const port = process.env.PORT || 8000
+    server.listen(port)
+    console.log('RESTful API demo server started on: ' + port)
+    //mocha delayed run for tests after DB connection
+    if (process.env.NODE_ENV === 'test') {
+        run() 
+    }
+    return 
 }
 
-//--------------ROUTES------------------
-require("./api/routes/auth.routes")(app)
-require("./api/routes/user.routes")(app)
-require("./api/routes/helprequest.routes")(app)
+makeServerApp()
 
-var server = http.createServer(app)
-
-const port = process.env.PORT || 3000
-server.listen(port)
-console.log('RESTful API demo server started on: ' + port)
-
-
+// exports.makeServerApp = makeServerApp 

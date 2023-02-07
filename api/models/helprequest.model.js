@@ -20,7 +20,8 @@ const HelpRequest = mongoose.model(
                 messageID: String,
                 isAudio: Boolean,
                 body: String,
-                data: Buffer
+                data: Buffer,
+                timeStamp: Date
             }
         ]
     })

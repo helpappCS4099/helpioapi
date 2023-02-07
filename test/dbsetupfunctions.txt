@@ -1,0 +1,7 @@
+what functions do i need to populate DB for testing?
+
+User States:
+    - user with unverified email and no APN
+    - user with verified email and no APN
+    - user fully verified
+

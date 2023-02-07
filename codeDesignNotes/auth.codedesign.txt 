@@ -1,0 +1,97 @@
+GET /users/email -> 
+    query DB & return a boolean
+    METHODS within controller:
+        matchEmailInDB()
+    MIDDLEWARE:
+        none
+
+POST /users -> 
+    check email is unique
+    push info into DB
+    generate hash & store in a db
+    send email
+    return restricted JWT for email retry
+    METHODS within controller:
+        matchEmailInDB()
+        getPasswordHash() -> passwordHash
+        createUserRecord(email, name, passwordHash) -> userID
+        generateEmailVerificationHash() -> Hash
+        createVerificationRecord(userID, hash)
+        sendEmail(hash, email)
+        generateEmailJWT(userID)
+    MIDDLEWARE:
+        none
+
+GET /verification/:hash ->
+    check hash is present in db
+    get uid from that record
+    remove hash verification record
+    change the user record to email verified
+    send apn cleared JWT but general access prohibited
+    METHODS within controller:
+        queryHash(hash) -> uid
+        verifyUser(uid)
+        removeHash(hash)
+        generateAPNJWT(uid)
+    MIDDLEWARE:
+        none
+
+POST /verification ->
+    check JWT for being granted email retry access
+    get UID
+    check hash record exists
+    if yes, resend email
+    METHODS within controller:
+        queryHashByUID(uid) -> hash
+        sendEmail(hash, email)
+    MIDDLEWARE:
+        verifyEmailJWT()
+
+GET /verification ->
+    clear JWT for this endpoint
+    get UID
+    check verified record
+    send apn cleared JWT but general access prohibited
+    METHODS within controller:
+        getUser(uid)
+        isVerified(userObj)
+        generateAPNJWT(uid)
+    MIDDLEWARE:
+        verificationJWT()
+        getUID()
+
+POST /apntoken ->
+    check JWT
+    get UID
+    update apntoken for UID
+    return JWT token cleared for general usage
+    METHODS within controller:
+        addAPNToken(uid)
+        generateJWT(uid)
+    MIDDLEWARE:
+        verifyAPNJWT()
+        getUID()
+
+POST /login ->
+    check credentials against DB
+    check that email is verified, if not send according JWT
+    clear APN token, encode request in JWT
+    send user object with the data
+    //login operation without a followup APN publishing is not possible
+    //should permissions be requested before account creation??
+    METHODS within controller:
+        hashPassword(password)
+        verifyCredentials(email, passwordHash) -> userObject
+        generateAPNJWT(uid) or generateEmailJWT(uid)
+    MIDDLEWARE:
+        none
+
+GET /logout ->
+    clear APN
+    destroy token?
+    METHODS within controller:
+        removeAPNToken(uid)
+    MIDDLEWARE:
+        verifyJWT()
+        getUID()
+
