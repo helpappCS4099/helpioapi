@@ -1,14 +1,18 @@
 const db = require("../api/models")
 const mongoose = require("mongoose")
+const { hashPassword } = require("../api/services/auth.service")
 const User = db.user
 
 //function to add a mock User record to the mongoose db
-exports.mockUnverifiedUser = async function mockUnverifiedUser(email) {
+exports.mockUnverifiedUser = async function mockUnverifiedUser(email, password) {
+
+    const passwordHash = await hashPassword(password ? password : "passwordHash")
+
     const mockUser = new User({
         _id: new mongoose.Types.ObjectId(),
         name: "Test User",
         email: email ? email : "testemail@email.com",
-        passwordHash: "passwordHash",
+        passwordHash: passwordHash,
         verified: false,
         friends: [],
         currentHelpRequestID: "",
@@ -19,12 +23,13 @@ exports.mockUnverifiedUser = async function mockUnverifiedUser(email) {
     return mockUser._id
 }
 
-exports.mockVerifiedUserNoAPN = async function mockVerifiedUserNoAPN(email) {
+exports.mockVerifiedUserNoAPN = async function mockVerifiedUserNoAPN(email, password) {
+    const passwordHash = await hashPassword(password ? password : "passwordHash")
     const mockUser = new User({
         _id: new mongoose.Types.ObjectId(),
         name: "Test User",
         email: email ? email : "testemail@email.com",
-        passwordHash: "passwordHash",
+        passwordHash: passwordHash,
         verified: true,
         friends: [],
         currentHelpRequestID: "",
@@ -35,12 +40,13 @@ exports.mockVerifiedUserNoAPN = async function mockVerifiedUserNoAPN(email) {
     return mockUser._id
 }
 
-exports.mockFullyVerifiedUser = async function mockFullyVerifiedUser(email) {
+exports.mockFullyVerifiedUser = async function mockFullyVerifiedUser(email, password) {
+    const passwordHash = await hashPassword(password ? password : "passwordHash")
     const mockUser = new User({
         _id: new mongoose.Types.ObjectId(),
         name: "Test User",
         email: email ? email : "testemail@email.com",
-        passwordHash: "passwordHash",
+        passwordHash: passwordHash,
         verified: true,
         friends: [],
         currentHelpRequestID: "",

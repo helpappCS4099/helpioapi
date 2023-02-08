@@ -18,5 +18,5 @@ var options = {
 exports.apnProvider = new apn.Provider(options)
 
 exports.updateAPNToken = (req, res) => {
-    
+    return res.status(200).send("OK")
 }

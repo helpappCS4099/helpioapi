@@ -3,13 +3,15 @@ const http = require('http')
 const db = require("./api/models")
 const dbConfig = require('./config/db.config')
 const { connectDB } = require('./database')
+const cookieParser = require('cookie-parser')
 
 var server = null;
+var app = express()
 
 async function makeServerApp() {
-    var app = express()
     app.use(express.json())
     app.use(express.urlencoded({ extended: true }))
+    app.use(cookieParser());
     //--------------ROUTES------------------
     require("./api/routes/auth.routes")(app)
     require("./api/routes/user.routes")(app)
@@ -28,4 +30,4 @@ async function makeServerApp() {
 
 makeServerApp()
 
-// exports.makeServerApp = makeServerApp 
+exports.app = app

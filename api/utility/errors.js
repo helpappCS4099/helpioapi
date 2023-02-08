@@ -26,6 +26,13 @@ exports.NoTokenProvidedError = class NoTokenProvidedError extends Error {
   }
 }
 
+exports.InvalidTokenError = class InvalidTokenError extends Error { 
+  constructor(message) {
+    super(message);
+    this.name = 'InvalidTokenError';
+  }
+}
+
 exports.TokenExpiredError = class TokenExpiredError extends Error { 
   constructor(message) {
     super(message);
@@ -54,3 +61,9 @@ exports.NoVerificationHasBeenRequestedError = class NotVerificationHasBeenReques
   }
 }
 
+exports.EmailNotSentError = class EmailNotSentError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'EmailNotSentError';
+  }
+}

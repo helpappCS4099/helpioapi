@@ -1,5 +1,6 @@
 const controller = require("../controllers/auth.controller")
 const apnController = require("../controllers/apn.controller")
+const { userIsAuthorised } = require("../middlewares/jwt.mwr")
 
 module.exports = function(app) {
     app.use(function(req,res,next) {
@@ -7,11 +8,12 @@ module.exports = function(app) {
             "Access-Control-Allow-Headers",
             "x-access-token, Origin, Content-Type, Accept"
         )
+        res.header( 'Access-Control-Allow-Credentials',true);
         next()
     })
 
     app.post("/login", [], controller.login)
-    app.get("/logout", [], controller.logout)
+    app.get("/logout", [userIsAuthorised], controller.logout)
     app.post("/users", [], controller.createUser)
     app.get("/users/email", [], controller.checkEmail)
     app.get("/verification/:hash", [], controller.verifyEmail)

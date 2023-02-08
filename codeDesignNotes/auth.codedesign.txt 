@@ -88,7 +88,7 @@ POST /login ->
 
 GET /logout ->
     clear APN
-    destroy token?
+    destroy token? //doesnt work that way haha
     METHODS within controller:
         removeAPNToken(uid)
     MIDDLEWARE:
