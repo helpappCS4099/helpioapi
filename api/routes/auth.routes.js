@@ -1,6 +1,6 @@
 const controller = require("../controllers/auth.controller")
 const apnController = require("../controllers/apn.controller")
-const { userIsAuthorised } = require("../middlewares/jwt.mwr")
+const { userIsAuthorised, userIsEmailVerificationAuthorised, userIsAPNTokenAuthorised } = require("../middlewares/jwt.mwr")
 
 module.exports = function(app) {
     app.use(function(req,res,next) {
@@ -16,8 +16,8 @@ module.exports = function(app) {
     app.get("/logout", [userIsAuthorised], controller.logout)
     app.post("/users", [], controller.createUser)
     app.get("/users/email", [], controller.checkEmail)
-    app.get("/verification/:hash", [], controller.verifyEmail)
-    app.post("/verification", [], controller.resendVerificationEmail)
-    app.get("/verification", [], controller.queryVerificationStatus)
-    app.post("/apntoken", [], apnController.updateAPNToken)
+    app.get("/verification/:hash", [], controller.performEmailVerification)
+    app.post("/verification", [userIsEmailVerificationAuthorised], controller.resendVerificationEmail)
+    app.get("/verification", [userIsEmailVerificationAuthorised], controller.queryVerificationStatus)
+    app.post("/apntoken", [userIsAPNTokenAuthorised], apnController.updateAPNToken)
 }

@@ -1,6 +1,6 @@
 const { comparePassword } = require("../services/auth.service")
-const { sendEmailVerificationEmail, setEmailVerificationHash } = require("../services/emailverification.service")
-const { getUserByEmail } = require("../services/user.service")
+const { sendEmailVerificationEmail, setEmailVerificationHash, verifyEmail, getUserByEmailVerificationHash } = require("../services/emailverification.service")
+const { getUserByEmail, addNewUser, getUserByID } = require("../services/user.service")
 const { generateAPNToken, generateAuthorisedToken, generateEmailVerificationToken } = require("../services/token.service")
 const { setAPNToken } = require("../services/apn.service")
 
@@ -57,22 +57,76 @@ exports.logout = async (req, res) => {
     return res.status(200).send({authenticated: false})
 }
 
-exports.createUser = (req, res) => {
-    return res.status(200).send("OK")
+exports.createUser = async (req, res) => {
+    try {
+        //create user
+        const userID = await addNewUser(
+            req.body.email,
+            req.body.password,
+            req.body.firstName,
+            req.body.lastName,)
+        //email verification
+        const emailVerificationHash = await setEmailVerificationHash(userID)
+        await sendEmailVerificationEmail(req.body.email, emailVerificationHash)
+        //JWT for email authentication
+        const emailVerificationToken = await generateEmailVerificationToken(userID)
+        res.cookie("jwt", emailVerificationToken, { httpOnly: true })
+        return res.status(200).send({
+            userWasCreated: true,
+            userID: userID
+        })
+    } catch (error) {
+        return res.status(200).send({userWasCreated: false})
+    }
 }
 
-exports.verifyEmail = (req, res) => {
-    return res.status(200).send("OK")
+exports.performEmailVerification = async (req, res) => {
+    try {
+        const hash = req.params.hash
+        const userID = await verifyEmail(hash)
+        return res.status(200).send({userIsVerified: true})
+    } catch (error) {
+        // console.log(error)
+        return res.status(403).send({userIsVerified: false})
+    }
+}
+
+exports.resendVerificationEmail = async (req, res) => {
+    try {
+        const userID = req.userID
+        //email verification
+        const emailVerificationHash = await setEmailVerificationHash(userID)
+        const user = await getUserByID(userID)
+        await sendEmailVerificationEmail(user.email, emailVerificationHash)
+        //JWT for email authentication
+        const emailVerificationToken = generateEmailVerificationToken(userID)
+        res.cookie("jwt", emailVerificationToken, { httpOnly: true })
+        return res.status(200).send({hashWasRefreshed: true})
+    } catch (error) {
+        console.log(error)
+        return res.status(200).send({hashWasRefreshed: false})
+    }
+}
+
+exports.queryVerificationStatus = async (req, res) => {
+    try {
+        const userID = req.userID
+        const user = await getUserByID(userID)
+        if (user.verified === true) {
+            //JWT for apn token update
+            const apnToken = generateAPNToken(userID)
+            res.cookie("jwt", apnToken, { httpOnly: true })
+            return res.status(200).send({userIsVerified: true})
+        } else {
+            res.cookie("jwt", req.cookies.jwt, { httpOnly: true })
+            return res.status(200).send({userIsVerified: false})
+        }
+    } catch (error) {
+        console.log(error)
+        return res.status(403).send({userIsVerified: false})
+    }
 }
 
 exports.checkEmail = (req, res) => {
-    return res.status(200).send("OK")
-}
-
-exports.resendVerificationEmail = (req, res) => {
-    return res.status(200).send("OK")
-}
-
-exports.queryVerificationStatus = (req, res) => {
     return res.status(200).send("OK")
 }

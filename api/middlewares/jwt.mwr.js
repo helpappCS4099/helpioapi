@@ -1,9 +1,8 @@
 const { decodeToken } = require('../services/token.service')
 
-exports.userIsEmailVerificationAuthorides = (req, res, next) => {
+exports.userIsEmailVerificationAuthorised = (req, res, next) => {
     try {
         const token = req.cookies.jwt
-        console.lot("token:", token)
         if (!token) {
             return res.status(403).send({
                 message: "No token provided!"

@@ -13,6 +13,7 @@ const { setEmailVerificationHash, getUserByEmailVerificationHash, verifyEmail, g
 const {app} = require('../server')
 var Cookies = require('expect-cookies')
 const setCookie = require('set-cookie-parser');
+const VerificationHash = require('../api/models/verificationHash.model');
 
 //parent block of authentication tests
 describe('Authentication Tests', () => {
@@ -297,4 +298,202 @@ describe('Authentication Tests', () => {
             expect(user.deviceToken).to.equal("")
         })
     })
+
+    describe("User Creation Endpoint Testing", function() {
+        this.timeout(10000)
+
+        it("Should create a user successfully", async function() {
+            const userEmail = "ar303@st-andrews.ac.uk"
+            const userPassword = "password"
+            const firstName = "Artem"
+            const lastName = "Rakhmanov"
+            const response = 
+                await request(app)
+                        .post("/users")
+                        .set("Content-Type", "application/json")
+                        .send({
+                            email: userEmail,
+                            password: userPassword,
+                            firstName: firstName,
+                            lastName: lastName
+                        })
+                        .expect(Cookies.set({'name': "jwt", 'options':['httponly']}))
+            expect(response.status).to.equal(200)
+            //check that email verification jwt is received
+            const cookie = setCookie.parse(response)[0]
+            const decodedToken = decodeToken(cookie.value)
+            expect(decodedToken.access).to.equal("emailVerification")
+            expect(response.body).to.have.property("userWasCreated").to.equal(true)
+        })
+        it("Should not create a user if email is already in use", async function() {
+            const userEmail = "ar303@st-andrews.ac.uk"
+            const userPassword = "password"
+            const firstName = "Artem"
+            const lastName = "Rakhmanov"
+            const existingUser = await mockUnverifiedUser(userEmail, userPassword, firstName, lastName)
+            const response = 
+                await request(app)
+                        .post("/users")
+                        .set("Content-Type", "application/json")
+                        .send({
+                            email: userEmail,
+                            password: userPassword,
+                            firstName: firstName,
+                            lastName: lastName
+                        })
+            expect(response.status).to.equal(200)
+            //check that email verification jwt is received
+            expect(response.body).to.have.property("userWasCreated").to.equal(false)
+        })
+
+    })
+
+    describe("Email Verification Endpoint Testing", function() {
+        this.timeout(10000)
+
+        it("Should verify a user successfully", async function() {
+            //user
+            const userEmail = "ar303@st-andrews.ac.uk"
+            const userPassword = "password"
+            const firstName = "Artem"
+            const lastName = "Rakhmanov"
+            const response = 
+                await request(app)
+                        .post("/users")
+                        .set("Content-Type", "application/json")
+                        .send({
+                            email: userEmail,
+                            password: userPassword,
+                            firstName: firstName,
+                            lastName: lastName
+                        })
+                        .expect(Cookies.set({'name': "jwt", 'options':['httponly']}))
+            expect(response.status).to.equal(200)
+            const cookieString = response.headers['set-cookie']
+            
+            //find email verification hash
+            const emailVerificationHash = await VerificationHash.findOne({userID: response.body.userID})
+            expect(emailVerificationHash).to.not.equal(null)
+            const verificationResponse =
+                await request(app)
+                        .get("/verification/" + emailVerificationHash.hash)
+                        .set("Content-Type", "application/json")
+                        .send({})
+            expect(response.status).to.equal(200)
+            expect(verificationResponse.body).to.have.property("userIsVerified").to.equal(true)
+            //check that apn token jwt is received
+
+            //check that user is verified (endpoint)
+            const userIsVerifiedResponse =
+                await request(app)
+                        .get("/verification")
+                        .set("Content-Type", "application/json")
+                        .set('Cookie', [
+                            cookieString
+                        ])
+                        .send({})
+            expect(userIsVerifiedResponse.status).to.equal(200)
+            expect(userIsVerifiedResponse.body).to.have.property("userIsVerified").to.equal(true)
+            const cookie = setCookie.parse(userIsVerifiedResponse)[0]
+            const decodedToken = decodeToken(cookie.value)
+            expect(decodedToken.access).to.equal("apnToken")
+        })
+
+        it("Should refresh a user's email verification hash", async function() {
+            //user
+            const userEmail = "ar303@st-andrews.ac.uk"
+            const userPassword = "password"
+            const firstName = "Artem"
+            const lastName = "Rakhmanov"
+            const response = 
+                await request(app)
+                        .post("/users")
+                        .set("Content-Type", "application/json")
+                        .send({
+                            email: userEmail,
+                            password: userPassword,
+                            firstName: firstName,
+                            lastName: lastName
+                        })
+                        .expect(Cookies.set({'name': "jwt", 'options':['httponly']}))
+            expect(response.status).to.equal(200)
+            const cookieString = response.headers['set-cookie']
+
+            //get the current hash
+            const currentHash = await VerificationHash.findOne({userID: response.body.userID})
+            expect(currentHash).to.not.equal(null)
+
+            //check that user is NOT verified (endpoint)
+            const userIsNotVerifiedResponse =
+                await request(app)
+                        .get("/verification")
+                        .set('Cookie', [
+                            cookieString
+                        ])
+                        .send({})
+            expect(userIsNotVerifiedResponse.status).to.equal(200)
+            expect(userIsNotVerifiedResponse.body).to.have.property("userIsVerified").to.equal(false)
+
+            //call to refresh
+            const refreshResponse = 
+                await request(app)
+                        .post("/verification")
+                        .set('Cookie', [
+                            cookieString
+                        ])
+                        .send({})
+            expect(refreshResponse.status).to.equal(200)
+            expect(refreshResponse.body).to.have.property("hashWasRefreshed").to.equal(true)
+
+            //get the new hash
+            const newHash = await VerificationHash.findOne({userID: response.body.userID})
+            expect(newHash).to.not.equal(null)
+            expect(newHash.hash).to.not.equal(currentHash.hash)
+
+            //check that user is STILL NOT verified (endpoint)
+            const userIsStillNotVerifiedResponse =
+                await request(app)
+                        .get("/verification")
+                        .set('Cookie', [
+                            cookieString
+                        ])
+                        .send({})
+            expect(userIsStillNotVerifiedResponse.status).to.equal(200)
+            expect(userIsStillNotVerifiedResponse.body).to.have.property("userIsVerified").to.equal(false)
+                        
+            //check that the old hash does not work
+            const oldVerificationResponse =
+                await request(app)
+                        .get("/verification/" + currentHash.hash)
+                        .send({})
+            expect(oldVerificationResponse.status).to.equal(403)
+
+            //check that the new hash works
+            const verificationResponse =
+                await request(app)
+                        .get("/verification/" + newHash.hash)
+                        .send({})
+            expect(response.status).to.equal(200)
+            expect(verificationResponse.body).to.have.property("userIsVerified").to.equal(true)
+
+            //check that user is verified (endpoint)
+            const userIsVerifiedResponse =
+                await request(app)
+                        .get("/verification")
+                        .set('Cookie', [
+                            cookieString
+                        ])
+                        .send({})
+            expect(userIsVerifiedResponse.status).to.equal(200)
+            expect(userIsVerifiedResponse.body).to.have.property("userIsVerified").to.equal(true)
+        })
+        it("Should reject verification status query if no jwt is present", async function() {
+            const response = 
+                await request(app)
+                        .get("/verification")
+                        .set("Content-Type", "application/json")
+                        .send({})
+            expect(response.status).to.equal(403)
+        })
+    })                
 })
