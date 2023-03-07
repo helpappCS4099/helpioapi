@@ -66,7 +66,7 @@ exports.sendEmailVerificationEmail = async (email, emailVerificationHash) => {
             from: authConfig.gmailAddress,
             to: email,
             subject: "Email Verification",
-            html: `<h1>Click <a href="${authConfig.rootURL}verification/${emailVerificationHash}">here</a> to verify your email</h1>`,
+            html: `<h1>Click <a href="${authConfig.rootURL}/verification/${emailVerificationHash}">here</a> to verify your email</h1>`,
         }
         
         transporter.sendMail(mailData, (error, info)=> {

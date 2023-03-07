@@ -1,0 +1,81 @@
+GET /users/me ->
+    search user by uid from token
+    return user object
+    METHODS within controller:
+        getUserByUID()
+    MIDDLEWARE:
+        - verifyJWT()
+        - getUID()
+
+GET /users/{userID}= ->
+    search user by uid from uri
+    return user object
+    METHODS within controller:
+        getUserByUID()
+    MIDDLEWARE:
+        - verifyJWT()
+        - getUID()
+
+GET /users?search= ->
+    mongoDB search by index: firstName, lastName, email
+    return array of user objects with only thumbnail data: uid, firstName, lastName, email, status
+    METHODS within controller:
+        searchByIndex()
+    MIDDLEWARE:
+        - verifyJWT()
+        - getUID()
+
+The next two routes are for sending friend requests and accepting friend requests
+They are one route & functionality is abstracted as if different here just for conceptual clarity
+
+flow: FriendFlow_1
+POST /users/{userID1}/friends/{userID2} ->
+    get userID1 & userID2 user object
+    check if userID1 is in U2's friends array & vice versa
+    add U1 to U2 friends array with status=3
+    add U2 to U1 friends array with status=2
+    METHODS within controller:
+        getUserByUID()
+        usersAreInEachOthersFriendsArray()
+        addFriendToUserObject(userObj, friend, status)
+    MIDDLEWARE:
+        - verifyJWT()
+        - restrictToUID=userID1
+        - getUID()
+
+flow: FriendFlow_2
+POST /users/{userID2}/friends/{userID1} ->
+    get userID1 & userID2 user object
+    check if userID1 is in U2's friends array & vice versa
+    if not, flow of sending friend request as above
+    else
+    if  U1 status=2 @ U2 friends, 
+        U2 status=3 @ U1 friends 
+    (== U1 sent friend request to U2)
+    then
+        U1 status=1 @ U2 friends
+        U2 status=1 @ U1 friends
+    METHODS within controller:
+        getUserByUID()
+        usersAreInEachOthersFriendsArray()
+        addFriendToUserObject(userObj, friend, status)
+    MIDDLEWARE:
+        - verifyJWT()
+        - restrictToUID=userID2
+        - getUID()
+
+DELETE /users/{userID1}/friends/{userID2} ->
+    get userID1 & userID2 user object
+    check if userID1 is in U2's friends array & vice versa
+    check if no active help requests are between U1 & U2
+    remove U1 from U2 friends array
+    remove U2 from U1 friends array
+    METHODS within controller:
+        getUserByUID()
+        usersAreInEachOthersFriendsArray()
+        noActiveHelpRequestsBetweenUsers()
+        removeFriendFromUserObject(user1, user2)
+    MIDDLEWARE:
+        - verifyJWT()
+        - restrictToUID=userID1
+        - getUID()

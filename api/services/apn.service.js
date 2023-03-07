@@ -12,3 +12,7 @@ exports.setAPNToken = async (userID, token) => {
     user.deviceToken = token
     await user.save()
 }
+
+// exports.sendNotification = async (toUser, title, body) => {
+
+// }

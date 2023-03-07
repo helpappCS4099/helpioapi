@@ -38,7 +38,7 @@ exports.userIsAPNTokenAuthorised = (req, res, next) => {
         }
         //decode token
         const decoded = decodeToken(token)
-        if (decoded.access === "apnToken") {
+        if (decoded.access === "apnToken" || decoded.access === "authorised") {
             //carry user id into request for convinience
             req.userID = decoded.userID
             next()
@@ -78,6 +78,19 @@ exports.userIsAuthorised = (req, res, next) => {
         }
     } catch(error) {
         console.log(error)
+        return res.status(401).send({
+            message: "Unauthorized!"
+        })
+    }
+}
+
+exports.userIDAuthorised = (req, res, next) => {
+    //extract userID from path parameters
+    const userID = req.params.userID1
+    if (userID === req.userID) {
+        next()
+        return
+    } else {
         return res.status(401).send({
             message: "Unauthorized!"
         })

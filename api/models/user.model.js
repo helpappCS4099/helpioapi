@@ -15,13 +15,28 @@ const User = mongoose.model(
                 status: Number,
                 firstName: String,
                 lastName: String,
-                emailPrefix: String,
-                colorScheme: Number
+                email: String,
+                // colorScheme: Number
             }
         ],
         currentHelpRequestID: String,
         helpRequests: [String]
     })
 )
+User.schema.index(
+    {
+        email: 'text', 
+        firstName: 'text', 
+        lastName: 'text'
+    },
+    {
+        weights: {
+            email: 5,
+            firstName: 3,
+            lastName: 3
+        }
+    })
+
+User.createIndexes()
 
 module.exports = User

@@ -1,4 +1,5 @@
 const controller = require("../controllers/user.controller")
+const { userIsAuthorised, userIDAuthorised } = require("../middlewares/jwt.mwr")
 
 module.exports = function(app) {
     app.use(function(req,res,next) {
@@ -9,11 +10,9 @@ module.exports = function(app) {
         next()
     })
 
-    app.get("/users/me", [], controller.getMyUserObject)
-    app.get("/users/:userID", [], controller.getUser)
-    app.get("/users/:userID/friends", [], controller.getUserFriends)
-    app.get("/users/me/friends", [], controller.getMyFriends)
-    app.get("/users", [], controller.search)
-    app.post("/users/:userID1/friends/:userID2", [], controller.addFriend)
-    app.delete("/users/:userID1/friends/:userID2", [], controller.deleteFriend)
+    app.get("/users/me", [userIsAuthorised], controller.getMyUserObject)
+    app.get("/users/:userID", [userIsAuthorised], controller.getUser)
+    app.get("/users", [userIsAuthorised], controller.search)
+    app.post("/users/:userID1/friends/:userID2", [userIsAuthorised, userIDAuthorised], controller.friendRequest)
+    app.delete("/users/:userID1/friends/:userID2", [userIsAuthorised, userIDAuthorised], controller.deleteFriend)
 }

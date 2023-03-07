@@ -1,0 +1,8 @@
+All Notifications sent with payload status:
+s = {
+    - 1 : open homepage
+    - 2 : open friends page
+    - 3 : open account page
+    - 4 : open a help request prompt
+}
+

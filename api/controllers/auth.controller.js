@@ -1,6 +1,6 @@
-const { comparePassword } = require("../services/auth.service")
+const { comparePassword, hashPassword } = require("../services/auth.service")
 const { sendEmailVerificationEmail, setEmailVerificationHash, verifyEmail, getUserByEmailVerificationHash } = require("../services/emailverification.service")
-const { getUserByEmail, addNewUser, getUserByID } = require("../services/user.service")
+const { getUserByEmail, addNewUser, getUserByID, matchEmailInDB } = require("../services/user.service")
 const { generateAPNToken, generateAuthorisedToken, generateEmailVerificationToken } = require("../services/token.service")
 const { setAPNToken } = require("../services/apn.service")
 
@@ -12,15 +12,16 @@ exports.login = async (req, res) => {
     const user = await getUserByEmail(email)
     if (user === null) {
         console.log("no user")
-        res.status(200).send({
+        return res.status(200).send({
             authenticated: false,
             message: "User not found"
         })
     }
+    console.log(user)
     const userPasswordHash = user.passwordHash
     const passwordMatches = await comparePassword(password, userPasswordHash)
     if (passwordMatches === false) {
-        res.status(200).send({
+        return res.status(200).send({
             authenticated: false,
             message: "Incorrect password"
         })
@@ -45,7 +46,7 @@ exports.login = async (req, res) => {
     return res.status(200).send({
         authenticated: true,
         userID: user._id,
-        ...user
+        user: {...user.toObject()}
     })
 }
 
@@ -54,17 +55,23 @@ exports.logout = async (req, res) => {
     res.clearCookie("jwt")
     //delete APN token
     await setAPNToken(req.userID, "")
+    console.log("logged out")
     return res.status(200).send({authenticated: false})
 }
 
 exports.createUser = async (req, res) => {
     try {
+        //hash password
+        console.log("create user")
+        console.log(req.body)
+        const passwordHash = await hashPassword(req.body.password)
+        console.log("password hashed")
         //create user
         const userID = await addNewUser(
             req.body.email,
-            req.body.password,
+            passwordHash,
             req.body.firstName,
-            req.body.lastName,)
+            req.body.lastName)
         //email verification
         const emailVerificationHash = await setEmailVerificationHash(userID)
         await sendEmailVerificationEmail(req.body.email, emailVerificationHash)
@@ -118,7 +125,7 @@ exports.queryVerificationStatus = async (req, res) => {
             res.cookie("jwt", apnToken, { httpOnly: true })
             return res.status(200).send({userIsVerified: true})
         } else {
-            res.cookie("jwt", req.cookies.jwt, { httpOnly: true })
+            // res.cookie("jwt", req.cookies.jwt, { httpOnly: true })
             return res.status(200).send({userIsVerified: false})
         }
     } catch (error) {
@@ -127,6 +134,23 @@ exports.queryVerificationStatus = async (req, res) => {
     }
 }
 
-exports.checkEmail = (req, res) => {
-    return res.status(200).send("OK")
+exports.checkEmail = async (req, res) => {
+    try {
+        const email = req.query.email
+        const emailIsValid = String(email).toLowerCase().match(/^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@st-andrews.ac.uk$/)
+        if (emailIsValid === false) {
+            return res.status(200).send({emailIsAvailable
+                : false})
+        }
+        const user = await matchEmailInDB(email)
+        if (user === true) {
+            return res.status(200).send({emailIsAvailable: false})
+        } else {
+            return res.status(200).send({emailIsAvailable: true})
+        }
+    } catch (error) {
+        console.log(error)
+        //revise this error management
+        return res.status(200).send({emailIsAvailable: false})
+    }
 }

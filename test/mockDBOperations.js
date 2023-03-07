@@ -44,7 +44,8 @@ exports.mockFullyVerifiedUser = async function mockFullyVerifiedUser(email, pass
     const passwordHash = await hashPassword(password ? password : "passwordHash")
     const mockUser = new User({
         _id: new mongoose.Types.ObjectId(),
-        name: "Test User",
+        firstName: "Archimedes",
+        lastName: "User",
         email: email ? email : "testemail@email.com",
         passwordHash: passwordHash,
         verified: true,
@@ -57,6 +58,41 @@ exports.mockFullyVerifiedUser = async function mockFullyVerifiedUser(email, pass
     return mockUser._id
 }
 
+exports.mockAndReturnFullyVerifiedUser = async function mockFullyVerifiedUser(email, password) {
+    const passwordHash = await hashPassword(password ? password : "passwordHash")
+    const mockUser = new User({
+        _id: new mongoose.Types.ObjectId(),
+        firstName: "Archimedes",
+        lastName: "User",
+        email: email ? email : "testemail@email.com",
+        passwordHash: passwordHash,
+        verified: true,
+        friends: [],
+        currentHelpRequestID: "",
+        helpRequests: [],
+        deviceToken: "ejejndbf33000APNTDeviceToken"
+    })
+    await mockUser.save()
+    return mockUser
+}
+
 exports.mockClearUsers = async function mockClearUsers() {
     await User.deleteMany()
+}
+
+exports.mockMyself = async () => {
+    const newUser = new User({
+        _id: new mongoose.Types.ObjectId(),
+        helpRequests: [],
+        firstName: 'Artem',
+        lastName: 'Rakhmanov',
+        email: 'ar303@st-andrews.ac.uk',
+        passwordHash: '$2b$10$PHEbziarPdZzmzaSRatqhejOHQkJsPvkC4F0NvSJeRJeSQJclGsgW',
+        verified: true,
+        friends: [],
+        currentHelpRequestID: '',
+        deviceToken: '8b03743418cd4582187113508f690a262b93cd0048cae1994ed88eab94071d65',
+    })
+    await newUser.save()
+    return newUser
 }

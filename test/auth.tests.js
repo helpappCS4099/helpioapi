@@ -495,5 +495,44 @@ describe('Authentication Tests', () => {
                         .send({})
             expect(response.status).to.equal(403)
         })
-    })                
+    })  
+    
+    describe("APN Token Endpoint Testing", function() {
+        this.timeout(10000)
+
+        it("Should update a user's APN token", async function() {
+            const user = await mockVerifiedUserNoAPN()
+            const apnToken = generateAPNToken(user._id)
+            const deviceToken = "someDeviceToken"
+            const response =
+                await request(app)
+                        .post("/apntoken")
+                        .set("Content-Type", "application/json")
+                        .set('Cookie', [
+                            "jwt=" + apnToken + "; HttpOnly"
+                        ])
+                        .send({
+                            deviceToken: deviceToken
+                        })
+            expect(response.status).to.equal(200)
+            expect(response.body).to.have.property("apnTokenWasUpdated").to.equal(true)
+            //check that retured token now grants access to the app
+            const cookie = setCookie.parse(response)[0]
+            const decodedToken = decodeToken(cookie.value)
+            expect(decodedToken.access).to.equal("authorised")
+
+            const updatedUser = await getUserByID(user._id)
+            expect(updatedUser.deviceToken).to.equal(deviceToken)
+        })
+        it("Reject APN token update if no jwt is present", async function() {
+            const response =
+                await request(app)
+                        .post("/apntoken")
+                        .set("Content-Type", "application/json")
+                        .send({
+                            deviceToken: "someDeviceToken"
+                        })
+            expect(response.status).to.equal(403)
+        })
+    })
 })

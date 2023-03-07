@@ -1,0 +1,27 @@
+Friend Functionality Overview:
+
+How data is stored:
+    denormilised copy of thumbnail data in arrays of each user.
+    key unit of data - status
+
+Friend status:
+    0 - not friends (state won't be used)
+    1 - friends
+    2 - pending friend request
+    3 - pending friend request from other user
+
+For two non-friends, one person sending a friend request:
+1. P1 sends friend request to P2
+2. P1's status is now 2, P2's status is now 3
+3. P2 accepts friend request:
+    P1's status is now 1, P2's status is now 1
+
+Corner cases:
+    - what if a friend is removed while a help request is pending?
+        illegal
+    - what if a friend is removed while a help request is active?
+        illegal
+    - unverified user????
+        illegal
+    - user without apn token?
+        legal, just ignore push notifications inside push notification handler

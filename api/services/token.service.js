@@ -9,7 +9,7 @@ exports.generateEmailVerificationToken = (userID) => {
             access: 'emailVerification'
         }, 
         authConfig.jwtSecret, 
-        {expiresIn: '3600'})
+        {expiresIn: '10m'})
     return token
 }
 
@@ -20,7 +20,7 @@ exports.generateAPNToken = (userID) => {
             access: 'apnToken'
         },
         authConfig.jwtSecret,
-        {expiresIn: '3600'})
+        {expiresIn: '10m'})
     return token
 }
 
@@ -31,7 +31,7 @@ exports.generateAuthorisedToken = (userID) => {
             access: 'authorised'
         },
         authConfig.jwtSecret,
-        {expiresIn: '180 days'})
+        {expiresIn: '180d'})
     return token
 }
 
