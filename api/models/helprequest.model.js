@@ -3,8 +3,10 @@ const mongoose = require("mongoose")
 const HelpRequest = mongoose.model(
     "HelpRequest",
     new mongoose.Schema({
+        authorUserID: String,
         isResolved: Boolean,
         category: Number,
+        location: [String],
         friends: [
             {
                 userID: String,

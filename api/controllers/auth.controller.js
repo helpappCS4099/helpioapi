@@ -46,7 +46,16 @@ exports.login = async (req, res) => {
     return res.status(200).send({
         authenticated: true,
         userID: user._id,
-        user: {...user.toObject()}
+        user: {
+            userID: user._id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            verified: user.verified,
+            friends: user.friends,
+            currentHelpRequestID: user.currentHelpRequestID,
+            colorScheme: user.colorScheme
+        }
     })
 }
 
@@ -71,7 +80,8 @@ exports.createUser = async (req, res) => {
             req.body.email,
             passwordHash,
             req.body.firstName,
-            req.body.lastName)
+            req.body.lastName
+            )
         //email verification
         const emailVerificationHash = await setEmailVerificationHash(userID)
         await sendEmailVerificationEmail(req.body.email, emailVerificationHash)

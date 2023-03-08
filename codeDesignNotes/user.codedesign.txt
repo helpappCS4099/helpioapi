@@ -1,3 +1,6 @@
+Important privacy design choise: helpRequests are not sent with any of the user object queries
+as they require an extra level of RBAC, therefore for this data - only specific routes to be used.
+
 GET /users/me ->
     search user by uid from token
     return user object
@@ -79,3 +82,10 @@ DELETE /users/{userID1}/friends/{userID2} ->
         - verifyJWT()
         - restrictToUID=userID1
         - getUID()
+
+account color scheme, assigned randomly on load
+0 - greenAsh
+1 - aquarium
+2 - pear
+3 - ochre
+4 - lavender

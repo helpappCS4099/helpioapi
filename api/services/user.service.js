@@ -31,6 +31,8 @@ exports.addNewUser = async (email, passwordHash, firstName, lastName) => {
         throw new InvalidUserDetailsError()
     }
     console.log("email is valid")
+    //randomly assign color scheme
+    let colorSchemeCode = Math.floor(Math.random() * 5)
     const newUser = new User({
         _id: new mongoose.Types.ObjectId(),
         firstName: firstName,
@@ -41,7 +43,8 @@ exports.addNewUser = async (email, passwordHash, firstName, lastName) => {
         friends: [],
         currentHelpRequestID: "",
         helpRequests: [],
-        deviceToken: ""
+        deviceToken: "",
+        colorScheme: colorSchemeCode
     })
     await newUser.save()
     console.log("user saved", newUser)
@@ -84,7 +87,7 @@ exports.addFriend = async (user, friend, status) => {
         userID: friend._id,
         firstName: friend.firstName,
         lastName: friend.lastName,
-        // colorScheme: friend.colorScheme,
+        colorScheme: friend.colorScheme,
         status: status,
         email: friend.email,
     }

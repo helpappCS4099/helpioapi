@@ -6,7 +6,7 @@ let mongod = null;
 const connectDB = async () => {
   console.log("connectDB called")
   try {
-    var dbUrl = `mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`;
+    var dbUrl = `mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}?replicaSet=rsName`;
     if (process.env.NODE_ENV === 'test') {
       console.log("test environment database")
       mongod = await MongoMemoryServer.create();

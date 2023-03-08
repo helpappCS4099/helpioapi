@@ -9,6 +9,7 @@ const User = mongoose.model(
         firstName: String,
         lastName: String,
         verified: Boolean,
+        colorScheme: Number,
         friends: [
             {
                 userID: String,

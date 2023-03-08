@@ -17,7 +17,7 @@ exports.getMyUserObject = async (req, res) => {
         verified: user.verified,
         friends: user.friends,
         currentHelpRequestID: user.currentHelpRequestID,
-        helpRequests: user.helpRequests
+        colorScheme: user.colorScheme
     })
 }
 
@@ -37,7 +37,7 @@ exports.getUser = async (req, res) => {
         verified: user.verified,
         friends: user.friends,
         currentHelpRequestID: user.currentHelpRequestID,
-        helpRequests: user.helpRequests
+        colorScheme: user.colorScheme
     })
 }
 
@@ -104,7 +104,7 @@ exports.friendRequest = async (req, res) => {
                     verified: updatedUser1.verified,
                     friends: updatedUser1.friends,
                     currentHelpRequestID: updatedUser1.currentHelpRequestID,
-                    helpRequests: updatedUser1.helpRequests
+                    colorScheme: updatedUser1.colorScheme
                 }
             })
         } else if (user1Status === 1 &&
@@ -136,7 +136,7 @@ exports.friendRequest = async (req, res) => {
                         verified: updatedUser.verified,
                         friends: updatedUser.friends,
                         currentHelpRequestID: updatedUser.currentHelpRequestID,
-                        helpRequests: updatedUser.helpRequests
+                        colorScheme: updatedUser.colorScheme
                     }
                 })
 
@@ -190,7 +190,7 @@ exports.deleteFriend = async (req, res) => {
                 verified: updatedUser1.verified,
                 friends: updatedUser1.friends,
                 currentHelpRequestID: updatedUser1.currentHelpRequestID,
-                helpRequests: updatedUser1.helpRequests
+                colorScheme: updatedUser1.colorScheme
             }
         })
     } catch (err) {
