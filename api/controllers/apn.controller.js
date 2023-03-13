@@ -27,7 +27,10 @@ exports.updateAPNToken = async (req, res) => {
         //set cleared JWT cookie
         const authorisedToken = generateAuthorisedToken(userID)
         res.cookie("jwt", authorisedToken, { httpOnly: true })
-        return res.status(200).send({apnTokenWasUpdated: true})
+        return res.status(200).send({
+            apnTokenWasUpdated: true,
+            jwt: authorisedToken
+        })
     } catch(error) {
         console.log(error)
         return res.status(500).send({apnTokenWasUpdated: false})

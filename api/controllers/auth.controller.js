@@ -27,24 +27,22 @@ exports.login = async (req, res) => {
         })
     }
     //determine which type of JWT to send
+    var token;
     if (user.verified === false) {
         //send email verification
         const emailVerificationHash = await setEmailVerificationHash(user._id)
         await sendEmailVerificationEmail(user.email, emailVerificationHash)
         //JWT for email authentication
-        const emailVerificationToken = await generateEmailVerificationToken(user._id)
-        res.cookie("jwt", emailVerificationToken, { httpOnly: true })
-    } else if (user.deviceToken === "") {
-        //JWT for apn token update
-        const apnToken = await generateAPNToken(user._id)
-        res.cookie("jwt", apnToken, { httpOnly: true })
+        token = generateEmailVerificationToken(user._id)
+        res.cookie("jwt", token, { httpOnly: true })
     } else {
-        //JWT for authorised user
-        const authorisedToken = await generateAuthorisedToken(user._id)
-        res.cookie("jwt", authorisedToken, { httpOnly: true })
+        //JWT for verified & authorised user
+        token = generateAuthorisedToken(user._id)
+        res.cookie("jwt", token, { httpOnly: true })
     }
     return res.status(200).send({
         authenticated: true,
+        jwt: token,
         userID: user._id,
         user: {
             userID: user._id,
@@ -132,8 +130,12 @@ exports.queryVerificationStatus = async (req, res) => {
         if (user.verified === true) {
             //JWT for apn token update
             const apnToken = generateAPNToken(userID)
+            const authorisedToken = generateAuthorisedToken(userID)
             res.cookie("jwt", apnToken, { httpOnly: true })
-            return res.status(200).send({userIsVerified: true})
+            return res.status(200).send({
+                userIsVerified: true,
+                jwt: authorisedToken
+            })
         } else {
             // res.cookie("jwt", req.cookies.jwt, { httpOnly: true })
             return res.status(200).send({userIsVerified: false})

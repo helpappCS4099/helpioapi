@@ -127,7 +127,7 @@ exports.resolveFriendRequest = async (user1, user2, status1, status2) => {
 
 exports.performSearch = async (searchString) => {
     try {
-        const searchResults = await User.find({$text: {$search: searchString}}).exec()
+        var searchResults = await User.find({$text: {$search: searchString}}).exec()
         if (searchResults.length === 0) {
             //perform regex search (inefficient) over name, email, lastName
             const regexSearchResults = await User.find({
@@ -137,9 +137,17 @@ exports.performSearch = async (searchString) => {
                     {email: {$regex: searchString, $options: "i"}}
                 ]
             }).exec()
-            return regexSearchResults
+            searchResults = regexSearchResults
         }
-        return searchResults
+        console.log("searchRes", searchResults)
+        searchResults = searchResults.map(function(model) { return model.toObject(); })
+        return searchResults.map(({
+            _id: userID,
+            ...rest
+          }) => ({
+            userID,
+            ...rest
+          }));
     } catch(err) {
         console.log(err)
         return []

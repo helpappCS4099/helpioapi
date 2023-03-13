@@ -17,7 +17,7 @@ const User = mongoose.model(
                 firstName: String,
                 lastName: String,
                 email: String,
-                // colorScheme: Number
+                colorScheme: Number
             }
         ],
         currentHelpRequestID: String,

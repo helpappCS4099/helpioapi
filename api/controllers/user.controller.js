@@ -50,6 +50,7 @@ exports.search = async (req, res) => {
             })
         }
         const searchResults = await performSearch(searchString)
+        console.log(searchResults)
         return res.status(200).send({
             searchResults: searchResults
         })

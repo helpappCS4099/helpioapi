@@ -228,27 +228,7 @@ describe('Authentication Tests', () => {
             expect(response.body).to.have.property("authenticated").to.equal(true)          
             expect(response.body).to.have.property("userID").to.equal(String(userID))
         })
-        it("Returns apn cookie upon login if user needs to supply APN Token", async function() {
-            const userEmail = "testEmail@email.com"
-            const userPassword = "password"
-            const userID = await mockVerifiedUserNoAPN(userEmail, userPassword)
-            const response = 
-                await request(app)
-                        .post("/login")
-                        .set("Content-Type", "application/json")
-                        .send({
-                            email: userEmail,
-                            password: userPassword
-                        })
-                        .expect(Cookies.set({'name': "jwt", 'options':['httponly']}))
-            const cookie = setCookie.parse(response)[0]
-            const decodedToken = decodeToken(cookie.value)
-            expect(decodedToken.userID).to.equal(String(userID))
-            expect(decodedToken.access).to.equal("apnToken")
-            expect(response.status).to.equal(200)
-            expect(response.body).to.have.property("authenticated").to.equal(true)          
-            expect(response.body).to.have.property("userID").to.equal(String(userID))
-        })
+        
         it("Returns authorized cookie upon login if user is verified & apn supplied", async function() {
             const userEmail = "testEmail@email.com"
             const userPassword = "password"
@@ -532,7 +512,7 @@ describe('Authentication Tests', () => {
                         .send({
                             deviceToken: "someDeviceToken"
                         })
-            expect(response.status).to.equal(403)
+            expect(response.status).to.equal(401)
         })
     })
 })

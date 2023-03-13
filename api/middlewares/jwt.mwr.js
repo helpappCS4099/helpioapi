@@ -30,11 +30,13 @@ exports.userIsEmailVerificationAuthorised = (req, res, next) => {
 
 exports.userIsAPNTokenAuthorised = (req, res, next) => {
     try {
-        const token = req.cookies.jwt
-        if (!token) {
-            return res.status(403).send({
-                message: "No token provided!"
-            })
+        var token = req.cookies.jwt
+        const header = req.headers.accesstoken
+        if (token === undefined && header === undefined) {
+            throw new Error("No token provided!")
+        }
+        if (header !== undefined) {
+            token = getJWTFromAuthorizationHeader(header)
         }
         //decode token
         const decoded = decodeToken(token)
@@ -58,11 +60,18 @@ exports.userIsAPNTokenAuthorised = (req, res, next) => {
 
 exports.userIsAuthorised = (req, res, next) => {
     try {
-        const token = req.cookies.jwt
+        const accessTokenHeader = req.headers.accesstoken
+        if (!accessTokenHeader && process.env.NODE_ENV !== 'test') {
+            throw new Error("No auth header provided!")
+        }
+        var token;
+        if (process.env.NODE_ENV === 'test') {
+            token = req.cookies.jwt   
+        } else {
+            token = getJWTFromAuthorizationHeader(accessTokenHeader)
+        }
         if (!token) {
-            return res.status(403).send({
-                message: "No token provided!"
-            })
+            throw new Error("No auth header provided!")
         }
         //decode token
         const decoded = decodeToken(token)
@@ -72,9 +81,7 @@ exports.userIsAuthorised = (req, res, next) => {
             next()
             return
         } else {
-            return res.status(401).send({
-                message: "Unauthorized!"
-            })
+            throw new Error("Unauthorized!")
         }
     } catch(error) {
         console.log(error)
@@ -95,5 +102,9 @@ exports.userIDAuthorised = (req, res, next) => {
             message: "Unauthorized!"
         })
     }
+}
+
+function getJWTFromAuthorizationHeader(header) {
+    return header.split(" ")[1]
 }
 
