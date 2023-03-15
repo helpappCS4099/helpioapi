@@ -2,26 +2,30 @@ exports.createHelpRequest = (req, res) => {
 
 }
 
-exports.getMyHelpRequests = (req, res) => {
+exports.updateLocation = (req, res) => {
     
 }
 
-exports.getHelpRequest = (req, res) => {
+// exports.getMyHelpRequests = (req, res) => {
     
-}
+// }
 
-exports.getCurrentHelpRequest = (req, res) => {
+// exports.getHelpRequest = (req, res) => {
     
-}
+// }
 
-exports.updateOnHelpRequest = (req, res) => {
+// exports.getCurrentHelpRequest = (req, res) => {
     
-}
+// }
 
-exports.respondToHelpRequest = (req, res) => {
+// exports.updateOnHelpRequest = (req, res) => {
     
-}
+// }
 
-exports.addNewMessage = (req, res) => {
+// exports.respondToHelpRequest = (req, res) => {
     
-}
+// }
+
+// exports.addNewMessage = (req, res) => {
+    
+// }

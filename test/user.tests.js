@@ -290,7 +290,7 @@ describe("User Tests", () => {
             expect(response2.status).to.equal(200)
 
             //mock a current critical situation for other user
-            otherUser.currentHelpRequestID = "test"
+            otherUser.myCurrentHelpRequestID = "test"
             await otherUser.save()
 
             //delete friend
@@ -322,15 +322,15 @@ describe("User Tests", () => {
             //search by first name returns self
             const searchResult = await performSearch(myself.firstName)
             expect(searchResult).to.have.lengthOf(1)
-            expect(searchResult[0]._id.toString()).to.equal(myself._id.toString())
+            expect(searchResult[0].userID.toString()).to.equal(myself._id.toString())
             //search by last name returns self
             const searchResult2 = await performSearch(myself.lastName)
             expect(searchResult2).to.have.lengthOf(1)
-            expect(searchResult2[0]._id.toString()).to.equal(myself._id.toString())
+            expect(searchResult2[0].userID.toString()).to.equal(myself._id.toString())
             //search by email returns self
             const searchResult3 = await performSearch(myself.email)
             expect(searchResult3).to.have.lengthOf(1)
-            expect(searchResult3[0]._id.toString()).to.equal(myself._id.toString())
+            expect(searchResult3[0].userID.toString()).to.equal(myself._id.toString())
         })
 
         it('Search by matching first letter would return both options', async () => {
@@ -340,8 +340,8 @@ describe("User Tests", () => {
             //the matching first letter is A, the search result should be both users
             const searchResult = await performSearch("A")
             expect(searchResult).to.have.lengthOf(2)
-            expect(searchResult[0]._id.toString()).to.be.oneOf([myself._id.toString(), otherUser._id.toString()])
-            expect(searchResult[1]._id.toString()).to.be.oneOf([myself._id.toString(), otherUser._id.toString()])
+            expect(searchResult[0].userID.toString()).to.be.oneOf([myself._id.toString(), otherUser._id.toString()])
+            expect(searchResult[1].userID.toString()).to.be.oneOf([myself._id.toString(), otherUser._id.toString()])
         })
 
         it('Search by email prefix returns corect user (partical search over email)', async () => {
@@ -351,11 +351,11 @@ describe("User Tests", () => {
             //test on myself, email starts with ar303:
             const searchResult = await performSearch("ar303")
             expect(searchResult).to.have.lengthOf(1)
-            expect(searchResult[0]._id.toString()).to.equal(myself._id.toString())
+            expect(searchResult[0].userID.toString()).to.equal(myself._id.toString())
             //test on other user, email starts with test:
             const searchResult2 = await performSearch("test")
             expect(searchResult2).to.have.lengthOf(1)
-            expect(searchResult2[0]._id.toString()).to.equal(otherUser._id.toString())
+            expect(searchResult2[0].userID.toString()).to.equal(otherUser._id.toString())
         })
     })
 
@@ -392,7 +392,7 @@ describe("User Tests", () => {
                 .send({})
             expect(response.status).to.equal(200)
             expect(response.body.searchResults).to.have.lengthOf(1)
-            expect(response.body.searchResults[0]._id).to.equal(myself._id.toString())
+            expect(response.body.searchResults[0].userID).to.equal(myself._id.toString())
             //search by last name returns self
             const response2 = await request(app)
                 .get('/users' + "?search=" + myself.lastName)
@@ -403,7 +403,7 @@ describe("User Tests", () => {
                 .send({})
             expect(response2.status).to.equal(200)
             expect(response2.body.searchResults).to.have.lengthOf(1)
-            expect(response2.body.searchResults[0]._id).to.equal(myself._id.toString())
+            expect(response2.body.searchResults[0].userID).to.equal(myself._id.toString())
             //search by email returns self
             const response3 = await request(app)
                 .get('/users' + "?search=" + myself.email)
@@ -414,7 +414,7 @@ describe("User Tests", () => {
                 .send({})
             expect(response3.status).to.equal(200)
             expect(response3.body.searchResults).to.have.lengthOf(1)
-            expect(response3.body.searchResults[0]._id).to.equal(myself._id.toString())
+            expect(response3.body.searchResults[0].userID).to.equal(myself._id.toString())
             //search by email prefix returns self
             const response4 = await request(app)
                 .get('/users' + "?search=" + myself.email.substring(0, 5))
@@ -425,7 +425,7 @@ describe("User Tests", () => {
                 .send({})
             expect(response4.status).to.equal(200)
             expect(response4.body.searchResults).to.have.lengthOf(1)
-            expect(response4.body.searchResults[0]._id).to.equal(myself._id.toString())
+            expect(response4.body.searchResults[0].userID).to.equal(myself._id.toString())
         })
 
         it('Search by matching first letter would return both options', async () => {
@@ -443,8 +443,8 @@ describe("User Tests", () => {
                 .send({})
             expect(response.status).to.equal(200)
             expect(response.body.searchResults).to.have.lengthOf(2)
-            expect(response.body.searchResults[0]._id).to.be.oneOf([myself._id.toString(), otherUser._id.toString()])
-            expect(response.body.searchResults[1]._id).to.be.oneOf([myself._id.toString(), otherUser._id.toString()])
+            expect(response.body.searchResults[0].userID).to.be.oneOf([myself._id.toString(), otherUser._id.toString()])
+            expect(response.body.searchResults[1].userID).to.be.oneOf([myself._id.toString(), otherUser._id.toString()])
         })
     })
 })

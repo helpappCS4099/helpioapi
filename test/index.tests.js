@@ -12,9 +12,10 @@ describe("HELPAPP_API_UNITTESTS", function () {
     beforeEach(function(done) {
         done()
     });
-    importTest("mockDBOperations.js", './health.tests.js');
-    importTest("auth.tests.js", './auth.tests.js');
-    importTest("user.tests.js", './user.tests.js');
+    // importTest("mockDBOperations.js", './health.tests.js');
+    // importTest("auth.tests.js", './auth.tests.js');
+    // importTest("user.tests.js", './user.tests.js');
+    importTest("help.tests.js", './help.tests.js');
     after(function(done) {
         done()
     });

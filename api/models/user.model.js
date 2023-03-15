@@ -20,7 +20,8 @@ const User = mongoose.model(
                 colorScheme: Number
             }
         ],
-        currentHelpRequestID: String,
+        myCurrentHelpRequestID: String,
+        respondingCurrentHelpRequestID: String,
         helpRequests: [String]
     })
 )

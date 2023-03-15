@@ -15,7 +15,8 @@ exports.mockUnverifiedUser = async function mockUnverifiedUser(email, password) 
         passwordHash: passwordHash,
         verified: false,
         friends: [],
-        currentHelpRequestID: "",
+        myCurrentHelpRequestID: "",
+        respondingCurrentHelpRequestID: "",
         helpRequests: [],
         deviceToken: ""
     })
@@ -32,7 +33,8 @@ exports.mockVerifiedUserNoAPN = async function mockVerifiedUserNoAPN(email, pass
         passwordHash: passwordHash,
         verified: true,
         friends: [],
-        currentHelpRequestID: "",
+        myCurrentHelpRequestID: "",
+        respondingCurrentHelpRequestID: "",
         helpRequests: [],
         deviceToken: ""
     })
@@ -50,7 +52,8 @@ exports.mockFullyVerifiedUser = async function mockFullyVerifiedUser(email, pass
         passwordHash: passwordHash,
         verified: true,
         friends: [],
-        currentHelpRequestID: "",
+        myCurrentHelpRequestID: "",
+        respondingCurrentHelpRequestID: "",
         helpRequests: [],
         deviceToken: "ejejndbf33000APNTDeviceToken"
     })
@@ -68,7 +71,8 @@ exports.mockAndReturnFullyVerifiedUser = async function mockFullyVerifiedUser(em
         passwordHash: passwordHash,
         verified: true,
         friends: [],
-        currentHelpRequestID: "",
+        myCurrentHelpRequestID: "",
+        respondingCurrentHelpRequestID: "",
         helpRequests: [],
         deviceToken: "ejejndbf33000APNTDeviceToken"
     })
@@ -90,7 +94,8 @@ exports.mockMyself = async () => {
         passwordHash: '$2b$10$PHEbziarPdZzmzaSRatqhejOHQkJsPvkC4F0NvSJeRJeSQJclGsgW',
         verified: true,
         friends: [],
-        currentHelpRequestID: '',
+        myCurrentHelpRequestID: '',
+        respondingCurrentHelpRequestID: "",
         deviceToken: '8b03743418cd4582187113508f690a262b93cd0048cae1994ed88eab94071d65',
     })
     await newUser.save()

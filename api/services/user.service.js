@@ -41,7 +41,8 @@ exports.addNewUser = async (email, passwordHash, firstName, lastName) => {
         passwordHash: passwordHash,
         verified: false,
         friends: [],
-        currentHelpRequestID: "",
+        myCurrentHelpRequestID: "",
+        respondingCurrentHelpRequestID: "",
         helpRequests: [],
         deviceToken: "",
         colorScheme: colorSchemeCode

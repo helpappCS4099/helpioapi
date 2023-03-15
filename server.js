@@ -4,8 +4,13 @@ const db = require("./api/models")
 const dbConfig = require('./config/db.config')
 const { connectDB } = require('./database')
 const cookieParser = require('cookie-parser')
+const io = require('socket.io')
+
+const {helpnsp} = require('./socketserver')
+const { socketJwtAuth } = require('./api/middlewares/jwt.mwr')
 
 var server = null;
+var socketserver = null;
 var app = express()
 
 async function makeServerApp() {
@@ -18,6 +23,12 @@ async function makeServerApp() {
     require("./api/routes/helprequest.routes")(app)
     await connectDB()
     server = http.createServer(app)
+
+    //namespace socket server at /ws/helprequests
+    socketserver = io(server).of(/^\/ws\/helprequests\/\d+$/)
+    socketserver.use(socketJwtAuth)
+    socketserver.on('connection', helpnsp)
+    
     const port = process.env.PORT || 8000
     server.listen(port)
     console.log('RESTful API demo server started on: ' + port)
@@ -31,3 +42,4 @@ async function makeServerApp() {
 makeServerApp()
 
 exports.app = app
+exports.socketserver = socketserver

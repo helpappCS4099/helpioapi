@@ -1,0 +1,7 @@
+Creates a new help request
+POST /helprequests -> 
+    check that no active help request is running
+    METHODS within controller:
+        matchEmailInDB()
+    MIDDLEWARE:
+        none

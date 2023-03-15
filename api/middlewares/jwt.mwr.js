@@ -108,3 +108,25 @@ function getJWTFromAuthorizationHeader(header) {
     return header.split(" ")[1]
 }
 
+exports.socketJwtAuth = (socket, next) => {
+    const token = socket.handshake.auth.token
+    if (!token) {
+        return next(new Error('Authentication error'))
+    }
+    try {
+        const decoded = decodeToken(token)
+        if (decoded.access === "authorised") {
+            //carry user id into request for convinience
+            socket.userID = decoded.userID
+            next()
+            return
+        } else {
+            throw new Error("Unauthorized!")
+        }
+    }
+    catch (error) {
+        console.log(error)
+        return next(new Error('Authentication error'))
+    }
+}
+

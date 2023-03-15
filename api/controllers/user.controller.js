@@ -16,7 +16,8 @@ exports.getMyUserObject = async (req, res) => {
         email: user.email,
         verified: user.verified,
         friends: user.friends,
-        currentHelpRequestID: user.currentHelpRequestID,
+        myCurrentHelpRequestID: user.myCurrentHelpRequestID,
+        respondingCurrentHelpRequestID: user.respondingCurrentHelpRequestID,
         colorScheme: user.colorScheme
     })
 }
@@ -36,7 +37,8 @@ exports.getUser = async (req, res) => {
         email: user.email,
         verified: user.verified,
         friends: user.friends,
-        currentHelpRequestID: user.currentHelpRequestID,
+        myCurrentHelpRequestID: user.myCurrentHelpRequestID,
+        respondingCurrentHelpRequestID: user.respondingCurrentHelpRequestID,
         colorScheme: user.colorScheme
     })
 }
@@ -104,7 +106,8 @@ exports.friendRequest = async (req, res) => {
                     email: updatedUser1.email,
                     verified: updatedUser1.verified,
                     friends: updatedUser1.friends,
-                    currentHelpRequestID: updatedUser1.currentHelpRequestID,
+                    myCurrentHelpRequestID: updatedUser1.myCurrentHelpRequestID,
+                    respondingCurrentHelpRequestID: updatedUser1.respondingCurrentHelpRequestID,
                     colorScheme: updatedUser1.colorScheme
                 }
             })
@@ -136,7 +139,8 @@ exports.friendRequest = async (req, res) => {
                         email: updatedUser.email,
                         verified: updatedUser.verified,
                         friends: updatedUser.friends,
-                        currentHelpRequestID: updatedUser.currentHelpRequestID,
+                        myCurrentHelpRequestID: updatedUser.myCurrentHelpRequestID,
+                        respondingCurrentHelpRequestID: updatedUser.respondingCurrentHelpRequestID,
                         colorScheme: updatedUser.colorScheme
                     }
                 })
@@ -175,7 +179,7 @@ exports.deleteFriend = async (req, res) => {
             })
         }
         //check that users are not engaged in a help request
-        if (user1.currentHelpRequestID !== "" || user2.currentHelpRequestID !== "") {
+        if (user1.myCurrentHelpRequestID !== "" || user2.myCurrentHelpRequestID !== "") {
             return res.status(400).send({
                 message: "Your friend is in a critical situation now. You will be able to remove them from your friends list after the help request is completed."
             })
@@ -190,7 +194,8 @@ exports.deleteFriend = async (req, res) => {
                 email: updatedUser1.email,
                 verified: updatedUser1.verified,
                 friends: updatedUser1.friends,
-                currentHelpRequestID: updatedUser1.currentHelpRequestID,
+                myCurrentHelpRequestID: updatedUser1.myCurrentHelpRequestID,
+                respondingCurrentHelpRequestID: updatedUser1.respondingCurrentHelpRequestID,
                 colorScheme: updatedUser1.colorScheme
             }
         })
