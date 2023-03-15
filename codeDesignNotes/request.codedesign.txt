@@ -1,7 +1,77 @@
 Creates a new help request
 POST /helprequests -> 
     check that no active help request is running
+    check that friends do not have request of their own
+    create
+    notify all respondents
     METHODS within controller:
-        matchEmailInDB()
+        getUser()
+        friendsAreNotInRequest() -> []  //if empty, give an error
+                                        //if not -> proceed, send a payload to show alert to notify
+        createHelpRequest()
+        notifyRespondents()
     MIDDLEWARE:
-        none
+        authorized
+
+POST /helprequests/:requestID/:userID1/accept
+    fetch userID from middleware
+    check that the request is active
+    change respondent status to 2?
+    notify owner
+    METHODS within a controller:
+        updateRespondentStatus()
+        notify()    
+    MIDDLEWARE:
+        authorized, IDauthorized, helpRequestCleared, requestIsActive
+
+POST /helprequests/:requestID/resolve
+    fetch userID from middleware
+    check that the request is active
+    resolve the request
+    add the data to the user's helpRequests array
+    notify respondents
+    METHODS within a controller:
+        resolveRequest()
+        addRequestToUser()
+        notifyRespondents()
+    MIDDLEWARE:
+        authorized, ownerOfHelpRequest, requestIsActive
+
+Fetches user's friends that can be added to the help request
+GET /helprequests/availableFriends ->
+    check for friends who are not in a critical situation
+    check for friends who are not already in a help request as respondents
+    return a list
+    METHODS within a controller:
+        friendsAreNotInRequest()
+    MIDDLEWARE:
+        authorized
+
+POST /helprequests/:requestID/:userID1/location
+    fetch userID from middleware
+    check that the request is active
+    update location for the user based on their userID
+    METHODS within a controller:
+        updateLocation()
+    MIDDLEWARE:
+        authorized, userIDAuthorized, helpRequestCleared, requestIsActive
+
+requestIsActive:
+    success statusCode: 200
+    not active statusCode: 201
+
+MODEL:
+currentStatus:
+    = (progressMessageOwner, progressMessageRespondent)
+    0: notifications sent = 
+        ("Notifications send. Hold on for a moment", 
+         "NAME is calling for help right now."
+        )
+    1: responded =
+        ("NAME / NUMBER OF PEOPLE responded",
+         "NAME / NUMBER OF PEOPLE / YOU responded to Artem."
+        )
+    2: on the way =
+        ("NAME / NUMBER OF PEOPLE is on the way",
+         "NAME / NUMBER OF PEOPLE / YOU is on the way to Artem."
+        )

@@ -6,6 +6,11 @@ const HelpRequest = mongoose.model(
         ownerUserID: String,
         isResolved: Boolean,
         category: Number,
+        currentStatus: {
+            progressStatus: Number,
+            progressMessageOwner: String,
+            progressMessageRespondent: String
+        },
         startTime: { type: Date, default: Date.now },
         endTime: Date,
         location: [

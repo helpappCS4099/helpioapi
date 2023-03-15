@@ -60,18 +60,13 @@ exports.userIsAPNTokenAuthorised = (req, res, next) => {
 
 exports.userIsAuthorised = (req, res, next) => {
     try {
-        const accessTokenHeader = req.headers.accesstoken
-        if (!accessTokenHeader && process.env.NODE_ENV !== 'test') {
-            throw new Error("No auth header provided!")
+        var token = req.cookies.jwt
+        const header = req.headers.accesstoken
+        if (token === undefined && header === undefined) {
+            throw new Error("No token provided!")
         }
-        var token;
-        if (process.env.NODE_ENV === 'test') {
-            token = req.cookies.jwt   
-        } else {
-            token = getJWTFromAuthorizationHeader(accessTokenHeader)
-        }
-        if (!token) {
-            throw new Error("No auth header provided!")
+        if (header !== undefined) {
+            token = getJWTFromAuthorizationHeader(header)
         }
         //decode token
         const decoded = decodeToken(token)

@@ -22,9 +22,57 @@ const User = mongoose.model(
         ],
         myCurrentHelpRequestID: String,
         respondingCurrentHelpRequestID: String,
-        helpRequests: [String]
-    })
-)
+        helpRequests: [
+            {
+                _id: String,
+                ownerUserID: String,
+                isResolved: Boolean,
+                category: Number,
+                currentStatus: {
+                    progressStatus: Number,
+                    progressMessageOwner: String,
+                    progressMessageRespondent: String
+                },
+                startTime: Date,
+                endTime: Date,
+                location: [
+                    {
+                        latitude: Number,
+                        longitude: Number,
+                        time: Date
+                    }
+                ],
+                respondents: [
+                    {
+                        userID: String,
+                        firstName: String,
+                        lastName: String,
+                        colorScheme: Number,
+                        status: Number,
+                        location: [
+                            {
+                                latitude: Number,
+                                longitude: Number,
+                                time: Date
+                            }
+                        ]
+                    }
+                ],
+                messages: [
+                    {
+                        messageID: String,
+                        userID: String,
+                        firstName: String,
+                        colorScheme: Number,
+                        isAudio: Boolean,
+                        body: String,
+                        data: Buffer,
+                        timeStamp: Date
+                    }
+                ]
+            }]
+        })
+    )
 User.schema.index(
     {
         email: 'text', 

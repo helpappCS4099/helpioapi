@@ -2,6 +2,7 @@ const db = require("../api/models")
 const mongoose = require("mongoose")
 const { hashPassword } = require("../api/services/auth.service")
 const User = db.user
+const HelpRequest = db.helprequest
 
 //function to add a mock User record to the mongoose db
 exports.mockUnverifiedUser = async function mockUnverifiedUser(email, password) {
@@ -84,20 +85,60 @@ exports.mockClearUsers = async function mockClearUsers() {
     await User.deleteMany()
 }
 
-exports.mockMyself = async () => {
+exports.mockMyself = async (hasFriend = false) => {
     const newUser = new User({
-        _id: new mongoose.Types.ObjectId(),
+        _id: new mongoose.Types.ObjectId("507f1f77bcf86cd799431111"),
         helpRequests: [],
         firstName: 'Artem',
         lastName: 'Rakhmanov',
         email: 'ar303@st-andrews.ac.uk',
         passwordHash: '$2b$10$PHEbziarPdZzmzaSRatqhejOHQkJsPvkC4F0NvSJeRJeSQJclGsgW',
         verified: true,
-        friends: [],
+        friends: !hasFriend ? [] : [
+            {
+               userID: "507f1f77bcf86cd799439011",
+                firstName: "Altyn",
+                lastName: "Orazgulyyeva",
+                email: "ao20@st-andrews.ac.uk",
+                colorScheme: 1,
+                status: 1
+            }
+        ],
         myCurrentHelpRequestID: '',
         respondingCurrentHelpRequestID: "",
         deviceToken: '8b03743418cd4582187113508f690a262b93cd0048cae1994ed88eab94071d65',
     })
     await newUser.save()
     return newUser
+}
+
+exports.mockOtherUser = async (hasFriend = true) => {
+    const newUser = new User({
+        _id: new mongoose.Types.ObjectId("507f1f77bcf86cd799439011"),
+        helpRequests: [],
+        firstName: 'Altyn',
+        lastName: 'Orazgulyyeva',
+        email: 'ao20@st-andrews.ac.uk',
+        passwordHash: '$2b$10$PHEbziarPdZzmzaSRatqhejOHQkJsPvkC4F0NvSJeRJeSQJclGsgW',
+        verified: true,
+        friends: [
+            {   
+                userID: "507f1f77bcf86cd799431111",
+                firstName: "Artem",
+                lastName: "Rakhmanov",
+                email: "ar303@st-andrews.ac.uk",
+                colorScheme: 1,
+                status: 1
+            }
+        ],
+        myCurrentHelpRequestID: '',
+        respondingCurrentHelpRequestID: "",
+        deviceToken: '8b03743418cd4582187113508f690a262b93cd0048cae1994ed88eab94071d66',
+    })
+    await newUser.save()
+    return newUser
+}
+
+exports.mockClearHelpRequests = async () => {
+    await HelpRequest.deleteMany()
 }
