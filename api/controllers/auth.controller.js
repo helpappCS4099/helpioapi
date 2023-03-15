@@ -51,7 +51,8 @@ exports.login = async (req, res) => {
             email: user.email,
             verified: user.verified,
             friends: user.friends,
-            currentHelpRequestID: user.currentHelpRequestID,
+            myCurrentHelpRequestID: user.myCurrentHelpRequestID,
+            respondingCurrentHelpRequestID: user.respondingCurrentHelpRequestID,
             colorScheme: user.colorScheme
         }
     })
