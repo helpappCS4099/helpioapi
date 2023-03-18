@@ -117,6 +117,38 @@ describe("Help Request Tests", function () {
             expect(fetchedHelpRequest._id.toString()).to.equal(newHelpRequest._id.toString())
         })
 
+        it('should fill in messages from new help request with the owners details', async () => {
+            const myself = await mockMyself(true)
+            const respondent = await mockOtherUser(true)
+            const jwt = tokenService.generateAuthorisedToken(myself._id)
+            const newHelpRequest = await service.newHelpRequest(
+                myself._id,
+                myself.firstName,
+                1,
+                [
+                    {
+                        userID: respondent._id,
+                        firstName: respondent.firstName,
+                        lastName: respondent.lastName,
+                        colorScheme: respondent.colorScheme,
+                        status: 1,
+                        location: []
+                    }
+                ],
+                ["messageOne", "messageTwo"]
+            )
+            const fetchedHelpRequest = await service.getHelpRequest(newHelpRequest._id)
+            expect(fetchedHelpRequest).to.not.be.null
+            expect(fetchedHelpRequest._id.toString()).to.equal(newHelpRequest._id.toString())
+            expect(fetchedHelpRequest.messages[0].userID.toString()).to.equal(myself._id.toString())
+            expect(fetchedHelpRequest.messages[0].firstName).to.equal(myself.firstName)
+            expect(fetchedHelpRequest.messages[0].colorScheme).to.equal(myself.colorScheme)
+            expect(fetchedHelpRequest.messages[1].userID.toString()).to.equal(myself._id.toString())
+            expect(fetchedHelpRequest.messages[1].firstName).to.equal(myself.firstName)
+            expect(fetchedHelpRequest.messages[1].colorScheme).to.equal(myself.colorScheme)
+        })
+
+
         it('created help request ID is in respondents\' respondingHRID', async () => {
             const myself = await mockMyself(true)
             const respondent = await mockOtherUser(true)
@@ -146,13 +178,13 @@ describe("Help Request Tests", function () {
             const respondent = await mockOtherUser(true)
             //valid
             var friendsNotInHelpRequest = await service.friendsNotInHelpRequest(myself.toObject())
-            expect(friendsNotInHelpRequest).to.not.be.null
-            expect(friendsNotInHelpRequest.length).to.equal(1)
+            expect(friendsNotInHelpRequest.friends).to.not.be.null
+            expect(friendsNotInHelpRequest.friends.length).to.equal(1)
             //add friend's help request ID (they are in critical situation)
             respondent.myCurrentHelpRequestID = '1234'
             await respondent.save()
             friendsNotInHelpRequest = await service.friendsNotInHelpRequest(myself.toObject())
-            expect(friendsNotInHelpRequest.length).to.equal(0)
+            expect(friendsNotInHelpRequest.friends.length).to.equal(0)
             //revert
             respondent.myCurrentHelpRequestID = ""
             await respondent.save()
@@ -160,7 +192,7 @@ describe("Help Request Tests", function () {
             respondent.respondingCurrentHelpRequestID = '1234'
             await respondent.save()
             friendsNotInHelpRequest = await service.friendsNotInHelpRequest(myself.toObject())
-            expect(friendsNotInHelpRequest.length).to.equal(0)
+            expect(friendsNotInHelpRequest.friends.length).to.equal(0)
         })
 
         it('pushed location update correctly to owner', async () => {

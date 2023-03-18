@@ -12,7 +12,8 @@ exports.getAvailableFriends = async (req, res) => {
         let availableFriends = await friendsNotInHelpRequest(user)
 
         res.status(200).send({
-            friends: availableFriends
+            message: availableFriends.message,
+            friends: availableFriends.friends
         })
     } catch (error) {
         console.log(error)
@@ -37,6 +38,7 @@ exports.createHelpRequest = async (req, res) => {
                                                 respondents, 
                                                 messages
         )
+        console.log(helpRequest)
         //update user's current help request ID
         user.myCurrentHelpRequestID = helpRequest._id.toString()
         await user.save()
@@ -186,27 +188,3 @@ exports.updateLocation = async (req, res) => {
         })
     }
 }
-
-// exports.getMyHelpRequests = (req, res) => {
-    
-// }
-
-// exports.getHelpRequest = (req, res) => {
-    
-// }
-
-// exports.getCurrentHelpRequest = (req, res) => {
-    
-// }
-
-// exports.updateOnHelpRequest = (req, res) => {
-    
-// }
-
-// exports.respondToHelpRequest = (req, res) => {
-    
-// }
-
-// exports.addNewMessage = (req, res) => {
-    
-// }

@@ -9,6 +9,12 @@ exports.getHelpRequest = async (helpRequestID) => {
 
 exports.friendsNotInHelpRequest = async (user) => {
     var friends = user.friends.filter(friend => friend.status === 1)
+    if (friends === undefined) {
+        return {
+            message: "You need to have approved friends to create a help request.",
+            friends: []
+        }
+    }
     for (let i = 0; i < friends.length; i++) {
         const friend = friends[i]
         const friendUser = await getUserByID(friend.userID)
@@ -16,7 +22,16 @@ exports.friendsNotInHelpRequest = async (user) => {
             friends.splice(i, 1)
         }
     }
-    return friends !== undefined ? friends : []
+    return friends !== [] ? 
+        {
+            message: "",
+            friends: friends
+        } 
+        : 
+        {
+            message: "All your friends are currently helping someone else or are in a critical situation.",
+            friends: []
+        }
 }
 
 exports.newHelpRequest = async (
@@ -26,6 +41,23 @@ exports.newHelpRequest = async (
     respondents,
     messages
 ) => {
+
+    //get user by userID
+    const user = await getUserByID(userID)
+    //transform messages to the DB format
+    var messagesDB = []
+    for (let i = 0; i < messages.length; i++) {
+        const message = messages[i]
+        messagesDB.push({
+            userID: userID,
+            firstName: firstName,
+            colorScheme: user.colorScheme,
+            isAudio: false,
+            body: message,
+            data: null
+        })
+    }
+
     const helpRequest = new HelpRequest({
         ownerUserID: userID,
         isResolved: false,
@@ -39,7 +71,7 @@ exports.newHelpRequest = async (
         endTime: null,
         location: [],
         respondents: respondents,
-        messages: messages
+        messages: messagesDB
     })
     await helpRequest.save()
     //for each respondent, add request ID to respondent current HR ID

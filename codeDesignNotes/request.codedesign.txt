@@ -75,3 +75,10 @@ currentStatus:
         ("NAME / NUMBER OF PEOPLE is on the way",
          "NAME / NUMBER OF PEOPLE / YOU is on the way to Artem."
         )
+
+critical situation codes:
+0: trauma
+1: assault
+2: stalking
+3: intoxication
+4: spiking
