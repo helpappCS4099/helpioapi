@@ -6,12 +6,29 @@ const { connectDB } = require('./database')
 const cookieParser = require('cookie-parser')
 const io = require('socket.io')
 
+const HelpRequest = db.helprequest
+
 const {helpnsp} = require('./socketserver')
 const { socketJwtAuth } = require('./api/middlewares/jwt.mwr')
+const { socketHelpRequestIsActive, socketCanReadHelpRequest } = require('./api/middlewares/help.mwr')
+const mongoose = require('mongoose')
+const { helprequest } = require('./api/models')
 
 var server = null;
 var socketserver = null;
 var app = express()
+
+var HelpRequestChangeStream = null;
+
+mongoose.connection.on('open', function (ref) {
+    console.log('db connection fire')
+    let db = mongoose.connection.db
+    try {
+        HelpRequestChangeStream = HelpRequest.watch()
+    } catch (err) {
+        console.log(err)
+    }
+})
 
 async function makeServerApp() {
     app.use(express.json())
@@ -25,8 +42,10 @@ async function makeServerApp() {
     server = http.createServer(app)
 
     //namespace socket server at /ws/helprequests
-    socketserver = io(server).of(/^\/ws\/helprequests\/\d+$/)
+    socketserver = io(server).of(/^\/ws\/helprequests\/[\w-]+$/)
     socketserver.use(socketJwtAuth)
+    socketserver.use(socketCanReadHelpRequest)
+    socketserver.use(socketHelpRequestIsActive)
     socketserver.on('connection', helpnsp)
     
     const port = process.env.PORT || 8000
@@ -36,10 +55,42 @@ async function makeServerApp() {
     if (process.env.NODE_ENV === 'test') {
         run() 
     }
+
     return 
 }
 
 makeServerApp()
 
+// const HelpRequestStream = HelpRequest.watch();
+
+// HelpRequestStream.on('change', (change) => {
+//     console.log('change stream triggered: ', change)
+//     // if (change.operationType === 'update') {
+//     //     if (change.documentKey._id.toString() === helpRequestID) {
+//     //         //update socket object
+//     //         socket.helpRequest = change.fullDocument
+//     //         //broadcast update to all sockets in namespace
+//     //         socket.broadcast.emit('update', {
+//     //             helpRequestID: helpRequestID,
+//     //             owner: {
+//     //                 userID: change.fullDocument.owner.userID,
+//     //                 firstName: change.fullDocument.owner.firstName,
+//     //                 lastName: change.fullDocument.owner.lastName,
+//     //                 colorScheme: change.fullDocument.owner.colorScheme
+//     //             },
+//     //             isResolved: change.fullDocument.isResolved,
+//     //             category: change.fullDocument.category,
+//     //             currentStatus: change.fullDocument.currentStatus,
+//     //             startTime: change.fullDocument.startTime,
+//     //             endTime: change.fullDocument.endTime,
+//     //             location: change.fullDocument.location,
+//     //             respondents: change.fullDocument.respondents,
+//     //             messages: change.fullDocument.messages
+//     //     })
+//     // }
+//     // }
+// })
+
 exports.app = app
 exports.socketserver = socketserver
+exports.HelpRequestChangeStream = HelpRequestChangeStream

@@ -1,0 +1,48 @@
+//socket handlers
+/*
+    socket event design: VICTIM
+    
+    connection
+        read help request by nsp and emit to client connected
+        emit update
+
+    update
+        (client) receive an update of any information to the help request
+
+    helprequest: resolve (ONLY OWNER)
+        mark help request as resolved
+        mirror operations in the REST endpoint
+        emit: close
+    
+    helprequest: location
+        push location update to help request
+        emit: update
+
+    helprequest: message
+        push new message to help request
+        emit: update
+
+    ------------ : RESPONDENT
+
+    (CLIENT FACING EVENT ONLY) helprequest: close
+        help request is resolved
+        disconnect
+
+    payload = {respondentId, firstName} for all below:
+
+    helprequest: accept 
+        for respondent, change their status to accepted
+        notify owner
+        emit: update
+
+    helprequest: reject
+        for respondent, change their status to rejected
+        notify owner
+        emit: update
+
+    helprequest: ontheway
+        for respondent, change their status to onTheWay
+        notify owner
+        emit: update
+
+*/

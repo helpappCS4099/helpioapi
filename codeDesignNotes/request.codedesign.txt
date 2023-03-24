@@ -75,6 +75,8 @@ currentStatus:
         ("NAME / NUMBER OF PEOPLE is on the way",
          "NAME / NUMBER OF PEOPLE / YOU is on the way to Artem."
         )
+    3: rejected (user)
+    no change for request status
 
 critical situation codes:
 0: trauma

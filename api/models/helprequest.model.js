@@ -3,7 +3,12 @@ const mongoose = require("mongoose")
 const HelpRequest = mongoose.model(
     "HelpRequest",
     new mongoose.Schema({
-        ownerUserID: String,
+        owner: {
+            userID: String,
+            firstName: String,
+            lastName: String,
+            colorScheme: Number
+        },
         isResolved: Boolean,
         category: Number,
         currentStatus: {

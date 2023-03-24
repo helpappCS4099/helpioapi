@@ -59,7 +59,12 @@ exports.newHelpRequest = async (
     }
 
     const helpRequest = new HelpRequest({
-        ownerUserID: userID,
+        owner: {
+            userID: userID,
+            firstName: firstName,
+            colorScheme: user.colorScheme,
+            lastName: user.lastName
+        },
         isResolved: false,
         category: category,
         currentStatus: {
@@ -92,7 +97,7 @@ exports.pushLocationUpdate = async (
     helpRequestObject
 ) => {
     //determine if the user is the owner or a respondent
-    if (helpRequestObject.ownerUserID === userID) {
+    if (helpRequestObject.owner.userID === userID) {
         //owner
         helpRequestObject.location.push({
             latitude: latitude,
@@ -156,6 +161,8 @@ exports.updateRespondentStatus = async (
         const respondent = helpRequestObject.respondents[i]
         if (respondent.userID === userID) {
             respondent.status = status
+            if (status === 3) break
+            if (status < helpRequestObject.currentStatus.progressStatus) break
             helpRequestObject.currentStatus.progressStatus = status
             helpRequestObject.currentStatus.progressMessageOwner = this.getStatusMessageTuple(
                 status,
@@ -178,7 +185,7 @@ exports.resolveAndSaveHelpRequest = async (helpRequestObject) => {
     helpRequestObject.endTime = Date.now()
     await helpRequestObject.save()
     //save to user
-    const ownerUser = await getUserByID(helpRequestObject.ownerUserID)
+    const ownerUser = await getUserByID(helpRequestObject.owner.userID)
     ownerUser.myCurrentHelpRequestID = ""
     ownerUser.helpRequests.push(helpRequestObject.toObject())
     await ownerUser.save()

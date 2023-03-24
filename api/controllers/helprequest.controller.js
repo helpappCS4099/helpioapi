@@ -58,7 +58,12 @@ exports.createHelpRequest = async (req, res) => {
         res.status(200).send({
             helpRequestID: helpRequest._id,
             messages: helpRequest.messages,
-            ownerUserID: helpRequest.ownerUserID,
+            owner: {
+                userID: helpRequest.owner.userID,
+                firstName: helpRequest.owner.firstName,
+                lastName: helpRequest.owner.lastName,
+                colorScheme: helpRequest.owner.colorScheme
+            },
             isResolved: helpRequest.isResolved,
             category: helpRequest.category,
             currentStatus: helpRequest.currentStatus,
@@ -90,7 +95,7 @@ exports.acceptHelpRequest = async (req, res) => {
 
         //send notification to owner
         let name = helpRequest.respondents[respondentIndex].firstName
-        const ownerUser = await getUserByID(helpRequest.ownerUserID)
+        const ownerUser = await getUserByID(helpRequest.owner.userID)
         let title = name + " has responded to your help request."
         let body = "Please check your app for more details."
         let status = 4
@@ -99,7 +104,12 @@ exports.acceptHelpRequest = async (req, res) => {
         res.status(200).send({
             helpRequestID: updatedHelpRequest._id,
             messages: updatedHelpRequest.messages,
-            ownerUserID: updatedHelpRequest.ownerUserID,
+            owner: {
+                userID: helpRequest.owner.userID,
+                firstName: helpRequest.owner.firstName,
+                lastName: helpRequest.owner.lastName,
+                colorScheme: helpRequest.owner.colorScheme
+            },
             isResolved: updatedHelpRequest.isResolved,
             category: updatedHelpRequest.category,
             currentStatus: updatedHelpRequest.currentStatus,
@@ -122,10 +132,8 @@ exports.resolveHelpRequest = async (req, res) => {
         
         helpRequest = await resolveAndSaveHelpRequest(helpRequest)
 
-        const user = await getUserByID(helpRequest.ownerUserID)
-
         //notify all respondents
-        let title = user.firstName + " is now safe"
+        let title = helpRequest.owner.firstName + " is now safe"
         let body = "Thank you for your help."
         let status = 1
         for (let i = 0; i < helpRequest.respondents.length; i++) {
@@ -137,7 +145,12 @@ exports.resolveHelpRequest = async (req, res) => {
         res.status(200).send({
             helpRequestID: helpRequest._id,
             messages: helpRequest.messages,
-            ownerUserID: helpRequest.ownerUserID,
+            owner: {
+                userID: helpRequest.owner.userID,
+                firstName: helpRequest.owner.firstName,
+                lastName: helpRequest.owner.lastName,
+                colorScheme: helpRequest.owner.colorScheme
+            },
             isResolved: helpRequest.isResolved,
             category: helpRequest.category,
             currentStatus: helpRequest.currentStatus,
@@ -172,7 +185,12 @@ exports.updateLocation = async (req, res) => {
         res.status(200).send({
             helpRequestID: helpRequest._id,
             messages: helpRequest.messages,
-            ownerUserID: helpRequest.ownerUserID,
+            owner: {
+                userID: helpRequest.owner.userID,
+                firstName: helpRequest.owner.firstName,
+                lastName: helpRequest.owner.lastName,
+                colorScheme: helpRequest.owner.colorScheme
+            },
             isResolved: helpRequest.isResolved,
             category: helpRequest.category,
             currentStatus: helpRequest.currentStatus,
@@ -188,3 +206,5 @@ exports.updateLocation = async (req, res) => {
         })
     }
 }
+
+

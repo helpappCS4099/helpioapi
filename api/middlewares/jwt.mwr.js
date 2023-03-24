@@ -116,7 +116,7 @@ exports.socketJwtAuth = (socket, next) => {
             next()
             return
         } else {
-            throw new Error("Unauthorized!")
+            return next(new Error('Not Authorized'))
         }
     }
     catch (error) {

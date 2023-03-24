@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const dbConfig = require('./config/db.config')
-const { MongoMemoryServer } = require('mongodb-memory-server');
+const { MongoMemoryServer, MongoMemoryReplSet } = require('mongodb-memory-server');
 let mongod = null;
 
 const connectDB = async () => {
@@ -11,6 +11,8 @@ const connectDB = async () => {
       console.log("test environment database")
       mongod = await MongoMemoryServer.create();
       dbUrl = mongod.getUri();
+      // mongod = await MongoMemoryReplSet.create({replSet: {count: 3}});
+      // dbUrl = mongod.getUri();
       console.log("dbUrl: "+  dbUrl)
     }
 

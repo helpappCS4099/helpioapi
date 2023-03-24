@@ -11,6 +11,7 @@ const service = require('../api/services/helprequest.service')
 const { mockClearUsers, mockUnverifiedUser, mockVerifiedUserNoAPN, mockAndReturnFullyVerifiedUser, mockMyself, mockFullyVerifiedUser, mockOtherUser, mockClearHelpRequests } = require('./mockDBOperations');
 const tokenService = require('../api/services/token.service');
 const { getUserByID } = require('../api/services/user.service');
+const { emit } = require('superagent');
 
 describe("Help Request Tests", function () {
     beforeEach((done) => {
@@ -23,73 +24,6 @@ describe("Help Request Tests", function () {
         mockClearHelpRequests()
         done()
     })
-    
-    // describe('socket tests', () => {
-    //     it('should connect to socket', async () => {
-    //         return new Promise(async (resolve, reject) => {
-    //             //mock myself
-    //             const myself = await mockMyself()
-    //             const jwt = tokenService.generateAuthorisedToken(myself._id)
-
-    //             var socket = io(
-    //                 'http://localhost:8000/ws/helprequests/1234',
-    //                 {
-    //                     auth: {
-    //                         token: jwt
-    //                     }
-    //                 }
-    //             );
-    //             socket.on('connect', function () {
-    //                 console.log('connected')
-    //                 socket.disconnect()
-    //                 resolve(true)
-    //             })
-    //             socket.on('connect_error', function (err) {
-    //                 console.log('connect_error', err)
-    //                 socket.disconnect()
-    //                 reject(err)
-    //             })
-    //         })
-    //     })
-
-    //     it ('can connect to two different namespace sockets', async () => {
-    //         return new Promise(async (resolve, reject) => {
-    //             //mock myself
-    //             const myself = await mockMyself()
-    //             const jwt = tokenService.generateAuthorisedToken(myself._id)
-    //             var socket1 = io(
-    //                 'http://localhost:8000/ws/helprequests/1234',
-    //                 {
-    //                     auth: {
-    //                         token: jwt
-    //                     }
-    //                 }
-    //             );
-    //             var socket2 = io(
-    //                 'http://localhost:8000/ws/helprequests/5678',
-    //                 {
-    //                     auth: {
-    //                         token: jwt
-    //                     }
-    //             })
-    //             socket1.on('connect', function () {})
-    //             socket1.on('connect_error', function (err) {
-    //                 socket1.disconnect()
-    //                 reject(err)
-    //             })
-    //             socket2.on('connect', function () {
-    //                 socket1.disconnect()
-    //                 socket2.disconnect()
-    //                 resolve(true)
-    //             })
-    //             socket2.on('connect_error', function (err) {
-    //                 console.log('connect_error', err)
-    //                 socket1.disconnect()
-    //                 socket2.disconnect()
-    //                 reject(err)
-    //             })
-    //         })})
-    // })
 
     describe('help request service tests', () => {
         it('should create a record for a help request', async () => {
@@ -115,7 +49,7 @@ describe("Help Request Tests", function () {
             const fetchedHelpRequest = await service.getHelpRequest(newHelpRequest._id)
             expect(fetchedHelpRequest).to.not.be.null
             expect(fetchedHelpRequest._id.toString()).to.equal(newHelpRequest._id.toString())
-        })
+        }).timeout(5000)
 
         it('should fill in messages from new help request with the owners details', async () => {
             const myself = await mockMyself(true)
@@ -541,5 +475,518 @@ describe("Help Request Tests", function () {
             expect(helpRequest2.location[0].latitude).to.equal(2)
             expect(helpRequest2.location[0].longitude).to.equal(2)
         })
+    })
+
+    describe('socket readers', () => {
+        it("should emit update on connect with the help request data", async () => {
+            await new Promise(async (resolve, reject) => {
+                //mock myself
+                const myself = await mockMyself(true)
+                const jwt = tokenService.generateAuthorisedToken(myself._id)
+                //mock other
+                const other = await mockOtherUser(true)
+                //create help request
+                const newHelpRequest = await service.newHelpRequest(
+                    myself._id,
+                    myself.firstName,
+                    1,
+                    [
+                        {
+                            userID: other._id.toString(),
+                            firstName: other.firstName,
+                            lastName: other.lastName,
+                            colorScheme: other.colorScheme,
+                            status: 0,
+                            location: []
+                        }
+                    ],
+                    []
+                )
+                let helprequestID = newHelpRequest._id.toString()
+                let url = "http://localhost:8000/ws/helprequests/" + helprequestID
+
+                var socket = io(
+                    url,
+                    {
+                        auth: {
+                            token: jwt
+                        }
+                    }
+                );
+                socket.once('connect', function () {
+                    console.log('connected')
+                })
+                socket.once('connect_error', function (err) {
+                    console.log('connect_error')
+                    console.log(err.req);      // the request object
+                    console.log(err.code);     // the error code, for example 1
+                    console.log(err.message);  // the error message, for example "Session ID unknown"
+                    console.log(err.context);  // some additional error context
+                    socket.disconnect()
+                    reject(err)
+                })
+
+                socket.once('update', function (data) {
+                    expect(data).to.not.be.null
+                    expect(data).to.not.be.undefined
+                    expect(data).to.not.be.empty
+                    expect(data.helpRequestID).to.equal(helprequestID)
+                    expect(data.owner.userID).to.equal(myself._id.toString())
+                    socket.disconnect()
+                    resolve()
+                })
+
+            })
+        })
+    })
+
+    describe('socket victim events', () => {
+
+        it('can resolve a request & other respondents receive a close event', async () => {
+            await new Promise(async (resolve, reject) => {
+                //mock myself
+                const myself = await mockMyself()
+                const jwt = tokenService.generateAuthorisedToken(myself._id)
+                //mock other
+                const other = await mockOtherUser(true)
+                const otherJWT = tokenService.generateAuthorisedToken(other._id)
+                //create help request
+                const newHelpRequest = await service.newHelpRequest(
+                    myself._id,
+                    myself.firstName,
+                    1,
+                    [
+                        {
+                            userID: other._id.toString(),
+                            firstName: other.firstName,
+                            lastName: other.lastName,
+                            colorScheme: other.colorScheme,
+                            status: 0,
+                            location: []
+                        }
+                    ],
+                    []
+                )
+                let helprequestID = newHelpRequest._id.toString()
+                let url = "http://localhost:8000/ws/helprequests/" + helprequestID
+                //connect both users to socket
+                var socket = io(
+                    url,
+                    {
+                        auth: {
+                            token: jwt
+                        }
+                    }
+                );
+                socket.once('connect', function () {})
+                socket.once('connect_error', function (err) {
+                    console.log('connect_error')
+                    console.log(err.req);      // the request object
+                    console.log(err.code);     // the error code, for example 1
+                    console.log(err.message);  // the error message, for example "Session ID unknown"
+                    console.log(err.context);  // some additional error context
+                    socket.disconnect()
+                    reject(err)
+                })
+                var socket2 = io(
+                    url,
+                    {
+                        auth: {
+                            token: otherJWT
+                        }
+                    }
+                );
+                socket2.once('connect', function () {})
+                socket2.once('connect_error', function (err) {
+                    console.log('connect_error')
+                    console.log(err.req);      // the request object
+                    console.log(err.code);     // the error code, for example 1
+                    console.log(err.message);  // the error message, for example "Session ID unknown"
+                    console.log(err.context);  // some additional error context
+                    socket2.disconnect()
+                    reject(err)
+                })
+                //listen for close event on socket2
+                socket2.once('helprequest: close', function (data) {
+                    console.log("close event received")
+                    resolve()
+                })
+                //resolve request on socket
+                socket.emit('helprequest: resolve')
+            })
+        })
+
+        it('respondent can accept a request, change to ontheway and reject', async () => {
+            var updated1
+            var updated2
+            var updated3
+            await new Promise(async (resolve, reject) => {
+                //mock myself
+                const myself = await mockMyself()
+                const jwt = tokenService.generateAuthorisedToken(myself._id)
+                //mock other
+                const other = await mockOtherUser(true)
+                const otherJWT = tokenService.generateAuthorisedToken(other._id)
+                //create help request
+                const newHelpRequest = await service.newHelpRequest(
+                    myself._id,
+                    myself.firstName,
+                    1,
+                    [
+                        {
+                            userID: other._id.toString(),
+                            firstName: other.firstName,
+                            lastName: other.lastName,
+                            colorScheme: other.colorScheme,
+                            status: 0,
+                            location: []
+                        }
+                    ],
+                    []
+                )
+                let helprequestID = newHelpRequest._id.toString()
+                let url = "http://localhost:8000/ws/helprequests/" + helprequestID
+                //connect both users to socket
+                var socket = io(
+                    url,
+                    {
+                        auth: {
+                            token: jwt
+                        }
+                    }
+                );
+                socket.once('connect', function () {})
+                socket.on('connect_error', function (err) {
+                    console.log('connect_error')
+                    console.log(err.req);      // the request object
+                    console.log(err.code);     // the error code, for example 1
+                    console.log(err.message);  // the error message, for example "Session ID unknown"
+                    console.log(err.context);  // some additional error context
+                    socket.disconnect()
+                    reject(err)
+                })
+                var socket2 = io(
+                    url,
+                    {
+                        auth: {
+                            token: otherJWT
+                        }
+                    }
+                );
+                socket2.once('connect', function () {})
+                socket2.on('connect_error', function (err) {
+                    console.log('connect_error')
+                    console.log(err.req);      // the request object
+                    console.log(err.code);     // the error code, for example 1
+                    console.log(err.message);  // the error message, for example "Session ID unknown"
+                    console.log(err.context);  // some additional error context
+                    socket2.disconnect()
+                    reject(err)
+                })
+                //change status to accept
+                socket2.emit('helprequest: accept', {
+                    respondentID: other._id.toString(),
+                    firstName: other.firstName
+                })
+                await new Promise(r => setTimeout(r, 500));
+                //fetch help requets and check
+                updated1 = await service.getHelpRequest(helprequestID)
+                
+                //change status to ontheway
+                socket2.emit('helprequest: ontheway', {
+                    respondentID: other._id.toString(),
+                    firstName: other.firstName
+                })
+                await new Promise(r => setTimeout(r, 1000));
+                //fetch help requets and check
+                updated2 = await service.getHelpRequest(helprequestID)
+                //change status to reject
+                socket2.emit('helprequest: reject', {
+                    respondentID: other._id.toString(),
+                    firstName: other.firstName
+                })
+                await new Promise(r => setTimeout(r, 500));
+                //fetch help requets and check
+                updated3 = await service.getHelpRequest(helprequestID)
+                resolve()
+            })
+            expect(updated1.respondents[0].status).to.equal(1)
+            expect(updated2.respondents[0].status).to.equal(2)
+            expect(updated3.respondents[0].status).to.equal(3)
+        }).timeout(10000)
+
+        it('respondent & owner can add location & a message', async () => {
+            var helprequestID;
+            var myUID;
+            var otherUID;
+            await new Promise(async (resolve, reject) => {
+                //mock myself
+                const myself = await mockMyself()
+                myUID = myself._id.toString()
+                const jwt = tokenService.generateAuthorisedToken(myself._id)
+                //mock other
+                const other = await mockOtherUser(true)
+                otherUID = other._id.toString()
+                const otherJWT = tokenService.generateAuthorisedToken(other._id)
+                //create help request
+                const newHelpRequest = await service.newHelpRequest(
+                    myself._id,
+                    myself.firstName,
+                    1,
+                    [
+                        {
+                            userID: other._id.toString(),
+                            firstName: other.firstName,
+                            lastName: other.lastName,
+                            colorScheme: other.colorScheme,
+                            status: 0,
+                            location: []
+                        }
+                    ],
+                    []
+                )
+                helprequestID = newHelpRequest._id.toString()
+                let url = "http://localhost:8000/ws/helprequests/" + helprequestID
+                //connect both users to socket
+                var socket = io(
+                    url,
+                    {
+                        auth: {
+                            token: jwt
+                        }
+                    }
+                );
+                socket.once('connect', function () {})
+                socket.on('connect_error', function (err) {
+                    console.log('connect_error')
+                    console.log(err.req);      // the request object
+                    console.log(err.code);     // the error code, for example 1
+                    console.log(err.message);  // the error message, for example "Session ID unknown"
+                    console.log(err.context);  // some additional error context
+                    socket.disconnect()
+                    reject(err)
+                })
+                var socket2 = io(
+                    url,
+                    {
+                        auth: {
+                            token: otherJWT
+                        }
+                    }
+                );
+                socket2.once('connect', function () {})
+                socket2.on('connect_error', function (err) {
+                    console.log('connect_error')
+                    console.log(err.req);      // the request object
+                    console.log(err.code);     // the error code, for example 1
+                    console.log(err.message);  // the error message, for example "Session ID unknown"
+                    console.log(err.context);  // some additional error context
+                    socket2.disconnect()
+                    reject(err)
+                })
+                //send location
+                socket2.emit('helprequest: location', {
+                    longitude: 1,
+                    latitude: 1
+                })
+                socket.emit('helprequest: location', {
+                    longitude: 2,
+                    latitude: 2
+                })
+                //send message
+                socket2.emit('helprequest: message', {
+                    message: 'test message'
+                })
+                await new Promise(r => setTimeout(r, 100));
+                socket.emit('helprequest: message', {
+                    message: 'test message 2'
+                })
+                await new Promise(r => setTimeout(r, 100));
+                socket.emit('helprequest: message', {
+                    message: 'test message 3'
+                })
+                await new Promise(r => setTimeout(r, 1000));
+                resolve()
+            })
+            //fetch help requets and check
+            const updated = await service.getHelpRequest(helprequestID)
+            expect(updated.respondents[0].location[0].longitude).to.equal(1)
+            expect(updated.respondents[0].location[0].latitude).to.equal(1)
+            expect(updated.messages[0].body).to.equal('test message')
+            expect(updated.messages[0].userID).to.equal(otherUID)
+            expect(updated.messages[1].body).to.equal('test message 2')
+            expect(updated.messages[1].userID).to.equal(myUID)
+            expect(updated.location[0].longitude).to.equal(2)
+            expect(updated.location[0].latitude).to.equal(2)
+        }).timeout(10000)
+
+        // it('update event is broadcasted after every event', async () => {
+        //     await new Promise(async (resolve, reject) => {
+        //         //mock myself
+        //         const myself = await mockMyself()
+        //         let myUID = myself._id.toString()
+        //         const jwt = tokenService.generateAuthorisedToken(myself._id)
+        //         //mock other
+        //         const other = await mockOtherUser(true)
+        //         let otherUID = other._id.toString()
+        //         const otherJWT = tokenService.generateAuthorisedToken(other._id)
+        //         //create help request
+        //         const newHelpRequest = await service.newHelpRequest(
+        //             myself._id,
+        //             myself.firstName,
+        //             1,
+        //             [
+        //                 {
+        //                     userID: other._id.toString(),
+        //                     firstName: other.firstName,
+        //                     lastName: other.lastName,
+        //                     colorScheme: other.colorScheme,
+        //                     status: 0,
+        //                     location: []
+        //                 }
+        //             ],
+        //             []
+        //         )
+        //         let helprequestID = newHelpRequest._id.toString()
+        //         let url = "http://localhost:8000/ws/helprequests/" + helprequestID
+        //         //connect both users to socket
+        //         var socket = io(
+        //             url,
+        //             {
+        //                 auth: {
+        //                     token: jwt
+        //                 }
+        //             }
+        //         );
+        //         socket.once('connect', function () {})
+        //         socket.on('connect_error', function (err) {
+        //             console.log('connect_error in last test')
+        //             console.log(err.req);      // the request object
+        //             console.log(err.code);     // the error code, for example 1
+        //             console.log(err.message);  // the error message, for example "Session ID unknown"
+        //             console.log(err.context);  // some additional error context
+        //             socket.disconnect()
+        //             reject(err)
+        //         })
+                
+        //         socket.on('update', function (payload) {
+        //             console.log('update emmited to owner', payload)
+        //         })
+        //         var socket2 = io(
+        //             url,
+        //             {
+        //                 auth: {
+        //                     token: otherJWT
+        //                 }
+        //             }
+        //         );
+        //         socket2.once('connect', function () {})
+        //         socket2.on('connect_error', function (err) {
+        //             console.log('connect_error in last test')
+        //             console.log(err.req);      // the request object
+        //             console.log(err.code);     // the error code, for example 1
+        //             console.log(err.message);  // the error message, for example "Session ID unknown"
+        //             console.log(err.context);  // some additional error context
+        //             socket2.disconnect()
+        //             reject(err)
+        //         })
+
+        //         socket2.on('update', function (payload) {
+        //             console.log('update emmited to other user', payload)
+        //         })
+                
+        //         await new Promise(r => setTimeout(r, 600));
+        //         //send location
+        //         console.log('emit location')
+        //         socket2.emit('helprequest: location', {
+        //             longitude: 1,
+        //             latitude: 1
+        //         })
+        //         // socket.emit('helprequest: message', {
+        //         //     message: 'test message 2'
+        //         // })
+        //         await new Promise(r => setTimeout(r, 600));
+        //     })
+        // }).timeout(10000)
+
+        // it('two users connected to same socket: IDS are stored in socket separately?', async () => {
+        //     return new Promise(async (resolve, reject) => {
+        //         //mock myself
+        //         const myself = await mockMyself()
+        //         const jwt = tokenService.generateAuthorisedToken(myself._id)
+        //         //mock other
+        //         const other = await mockOtherUser(true)
+        //         const otherJWT = tokenService.generateAuthorisedToken(other._id)
+        //         //create help request
+        //         const newHelpRequest = await service.newHelpRequest(
+        //             myself._id,
+        //             myself.firstName,
+        //             1,
+        //             [
+        //                 {
+        //                     userID: other._id.toString(),
+        //                     firstName: other.firstName,
+        //                     lastName: other.lastName,
+        //                     colorScheme: other.colorScheme,
+        //                     status: 0,
+        //                     location: []
+        //                 }
+        //             ],
+        //             []
+        //         )
+        //         let helprequestID = newHelpRequest._id.toString()
+        //         let url = "http://localhost:8000/ws/helprequests/" + helprequestID
+        //         //connect both users to socket
+        //         var socket1 = io(
+        //             url,
+        //             {
+        //                 auth: {
+        //                     token: jwt
+        //                 }
+        //             }
+        //         );
+        //         var socket2 = io(
+        //             url,
+        //             {
+        //                 auth: {
+        //                     token: otherJWT
+        //                 }
+        //             }
+        //         );
+        //         socket1.on('connect', function () {})
+        //         socket1.on('connect_error', function (err) {
+        //             socket1.disconnect()
+        //             socket2.disconnect()
+        //             reject(err)
+        //         })
+        //         socket2.on('connect', function () {})
+        //         socket2.on('connect_error', function (err) {
+        //             socket1.disconnect()
+        //             socket2.disconnect()
+        //             reject(err)
+        //         })
+        //         var storedID1;
+        //         var storedID2;
+        //         socket1.on('userIDTest', function (data) {
+        //             console.log('update', data)
+        //             storedID1 = data.userIDStored
+        //         })
+        //         socket2.on('userIDTest', function (data) {
+        //             console.log('update', data)
+        //             storedID2 = data.userIDStored
+        //         })
+
+        //         setTimeout(() => {
+        //             expect(storedID1).to.not.be.null
+        //             expect(storedID1).to.not.be.undefined
+        //             expect(storedID1).to.not.be.empty
+        //             expect(storedID2).to.not.be.null
+        //             expect(storedID2).to.not.be.undefined
+        //             expect(storedID2).to.not.be.empty
+        //             expect(storedID1).to.not.equal(storedID2)
+        //             resolve(true)
+        //         }, 1500);
+        //     })
+        // })
     })
 })
