@@ -44,7 +44,7 @@ const HelpRequest = mongoose.model(
         ],
         messages: [
             {
-                messageID: {type: String, required: true, unique: true, default: mongoose.Types.ObjectId},
+                messageID: {type: String, default: mongoose.Types.ObjectId},
                 userID: String,
                 firstName: String,
                 colorScheme: Number,
