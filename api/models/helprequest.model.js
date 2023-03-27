@@ -32,6 +32,7 @@ const HelpRequest = mongoose.model(
                 lastName: String,
                 colorScheme: Number,
                 status: Number,
+                deviceToken: String,
                 location: [
                     {
                         latitude: Number,

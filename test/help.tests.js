@@ -712,7 +712,7 @@ describe("Help Request Tests", function () {
             })
             expect(updated1.respondents[0].status).to.equal(1)
             expect(updated2.respondents[0].status).to.equal(2)
-            expect(updated3.respondents[0].status).to.equal(3)
+            expect(updated3.respondents[0].status).to.equal(-1)
         }).timeout(10000)
 
         it('respondent & owner can add location & a message', async () => {

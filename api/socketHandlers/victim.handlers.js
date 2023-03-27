@@ -15,9 +15,11 @@ module.exports = (socket) => {
                     title: socket.helpRequest.owner.firstName + " is now safe.",
                     body: "Thank you for your help."
                 }
-                apnController.sendNotification(respondent.userID, n.title, n.body, n.status)
+                apnController.sendNotification(respondent, n.title, n.body, n.status)
             }
+            
             //emit 'close' event
+            socket.emit('helprequest: close')
             socket.to(socket.helpRequest._id.toString()).emit('helprequest: close')
         })
     }

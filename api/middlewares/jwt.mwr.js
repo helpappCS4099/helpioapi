@@ -104,6 +104,7 @@ function getJWTFromAuthorizationHeader(header) {
 }
 
 exports.socketJwtAuth = (socket, next) => {
+    console.log("socketJwtAuth")
     const token = socket.handshake.auth.token
     if (!token) {
         return next(new Error('Authentication error'))

@@ -29,7 +29,18 @@ exports.createHelpRequest = async (req, res) => {
         const userID = req.userID
         const user = await getUserByID(userID)
         const category = req.body.category
-        const respondents = req.body.respondents
+        var respondentUsers = []
+        for (let i = 0; i < req.body.respondents.length; i++) {
+            const respondent = req.body.respondents[i]
+            const respondentUser = await getUserByID(respondent.userID)
+            respondentUsers.push(respondentUser)
+        }
+        const respondents = req.body.respondents.map((resp, i) => {
+            return {
+                ...resp,
+                deviceToken: respondentUsers[i].deviceToken
+            }
+        })
         const messages = req.body.messages
         // create help request
         const helpRequest = await newHelpRequest(userID, 
@@ -44,15 +55,14 @@ exports.createHelpRequest = async (req, res) => {
         await user.save()
         //send notifications to all respondents
         for (let i = 0; i < respondents.length; i++) {
-            const respondent = respondents[i]
-            const respondentUser = await getUserByID(respondent.userID)
+            const respondent = respondentUsers[i]
             //send notification to respondent
             const n = {
                 status: 4,
                 title: user.firstName + " needs your help right now.",
                 body: "Please respond urgently."
             }
-            await sendNotification(respondentUser, n.title, n.body, n.status)
+            await sendNotification(respondent, n.title, n.body, n.status)
         }
         //send response
         res.status(200).send({

@@ -24,7 +24,11 @@ mongoose.connection.on('open', function (ref) {
     console.log('db connection fire')
     let db = mongoose.connection.db
     try {
-        HelpRequestChangeStream = HelpRequest.watch()
+        if (process.env.NODE_ENV != 'test') {
+            console.log("try to watch")
+            HelpRequestChangeStream = HelpRequest.watch()
+            console.log("watching")
+        }
     } catch (err) {
         console.log(err)
     }

@@ -1,6 +1,7 @@
 const service = require('../services/helprequest.service')
 const { sendNotification } = require('../controllers/apn.controller')
 const { sendUpdate } = require('../../socketserver')
+const { getUserByID } = require('../services/user.service')
 
 module.exports = (socket) => {
 
@@ -28,7 +29,7 @@ module.exports = (socket) => {
         } else if (status === 2) {
             message = payload.firstName + " is on the way."
             body = "Open the app to see how close they are."
-        } else if (status === 3) {
+        } else if (status === -1) {
             message = payload.firstName + " rejected."
             body = "Open the app to see other respondents."
         }
@@ -37,7 +38,8 @@ module.exports = (socket) => {
             title: message,
             body: body
         }
-        await sendNotification(socket.helpRequest.owner.userID, n.title, n.body, n.status)
+        const ownerUser =  await getUserByID(socket.helpRequest.owner.userID)
+        await sendNotification(ownerUser, n.title, n.body, n.status)
         const helpRequest = socket.helpRequest
         socket.to(helpRequest._id.toString()).emit('update', {
             helpRequestID: helpRequest._id,
@@ -64,7 +66,7 @@ module.exports = (socket) => {
         await updateStatus(payload, status)
     })
     socket.on('helprequest: reject', async (payload) => {
-        let status = 3
+        let status = -1
         console.log("rejecting help request")
         await updateStatus(payload, status)
     })

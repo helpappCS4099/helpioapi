@@ -78,7 +78,7 @@ module.exports = (socket) => {
             //send push notification to all respondents
             for (let i = 0; i < helpRequest.respondents.length; i++) {
                 const respondent = helpRequest.respondents[i]
-                apnController.sendNotification(respondent.userID, n.title, n.body, n.status)
+                apnController.sendNotification(respondent, n.title, n.body, n.status)
             }
         } else {
             //append message for respondent
@@ -107,7 +107,7 @@ module.exports = (socket) => {
                     for (let i = 0; i < helpRequest.respondents.length; i++) {
                         const respondent = helpRequest.respondents[i]
                         if (respondent.userID !== socket.userID) {
-                            apnController.sendNotification(respondent.userID, n.title, n.body, n.status)
+                            apnController.sendNotification(respondent, n.title, n.body, n.status)
                         }
                     }
                     console.log("finished sending notifications")

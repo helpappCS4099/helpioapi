@@ -161,7 +161,7 @@ exports.updateRespondentStatus = async (
         const respondent = helpRequestObject.respondents[i]
         if (respondent.userID === userID) {
             respondent.status = status
-            if (status === 3) break
+            if (status === -1) break
             if (status < helpRequestObject.currentStatus.progressStatus) break
             helpRequestObject.currentStatus.progressStatus = status
             helpRequestObject.currentStatus.progressMessageOwner = this.getStatusMessageTuple(
