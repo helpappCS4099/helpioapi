@@ -46,6 +46,7 @@ async function makeServerApp() {
     server = http.createServer(app)
 
     //namespace socket server at /ws/helprequests
+    io.set("transports", ["xhr-polling"])
     socketserver = io(server).of(/^\/ws\/helprequests\/[\w-]+$/)
     socketserver.use(socketJwtAuth)
     socketserver.use(socketCanReadHelpRequest)
