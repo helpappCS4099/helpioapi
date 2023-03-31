@@ -12,7 +12,7 @@ module.exports = (socket) => {
             console.log('payload ID does not match token ID')
             return
         }
-
+        socket.helpRequest = await service.getHelpRequest(socket.helpRequest._id)
         socket.helpRequest = await service.updateRespondentStatus(
             socket.helpRequest,
             payload.respondentID,
@@ -41,6 +41,23 @@ module.exports = (socket) => {
         const ownerUser =  await getUserByID(socket.helpRequest.owner.userID)
         await sendNotification(ownerUser, n.title, n.body, n.status)
         const helpRequest = socket.helpRequest
+        socket.emit('update', {
+            helpRequestID: helpRequest._id,
+            owner: {
+                userID: helpRequest.owner.userID,
+                firstName: helpRequest.owner.firstName,
+                lastName: helpRequest.owner.lastName,
+                colorScheme: helpRequest.owner.colorScheme
+                },
+            isResolved: helpRequest.isResolved,
+            category: helpRequest.category,
+            currentStatus: helpRequest.currentStatus,
+            startTime: helpRequest.startTime,
+            endTime: helpRequest.endTime,
+            location: helpRequest.location,
+            respondents: helpRequest.respondents,
+            messages: helpRequest.messages
+        })
         socket.to(helpRequest._id.toString()).emit('update', {
             helpRequestID: helpRequest._id,
             owner: {

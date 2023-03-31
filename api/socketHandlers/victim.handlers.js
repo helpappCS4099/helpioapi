@@ -11,7 +11,7 @@ module.exports = (socket) => {
             for (let i = 0; i < socket.helpRequest.respondents.length; i++) {
                 const respondent = socket.helpRequest.respondents[i]
                 const n = {
-                    status: 1,
+                    status: 4,
                     title: socket.helpRequest.owner.firstName + " is now safe.",
                     body: "Thank you for your help."
                 }

@@ -135,7 +135,7 @@ exports.getStatusMessageTuple = (
         //request created -> notifying respondents
         return [
             "Notifications sent. Hold on for a moment",
-            firstName + "is calling for help right now"
+            firstName + " is calling for help right now"
         ]
     } else if (status === 1) {
         //respondent accepted

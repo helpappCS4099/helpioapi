@@ -191,7 +191,7 @@ exports.updateLocation = async (req, res) => {
             longitude,
             helpRequest
         )
-
+        console.log("updated location via rest", longitude, latitude)
         res.status(200).send({
             helpRequestID: helpRequest._id,
             messages: helpRequest.messages,
@@ -208,6 +208,33 @@ exports.updateLocation = async (req, res) => {
             endTime: helpRequest.endTime,
             location: helpRequest.location,
             respondents: helpRequest.respondents
+        })
+    } catch (err) {
+        console.log(err)
+        res.status(500).send({
+            message: "Internal Server Error"
+        })
+    }
+}
+
+exports.sendSOS = async (req, res) => {
+    //send sos push to all respondents
+    try {
+        //for each of the respondents, send a push notification
+        const helpRequest = req.helpRequest
+        const userID = req.userID
+        const user = await getUserByID(userID)
+        const name = user.firstName
+        const title = "⚠️ SOS"
+        const body = name + " has sent an SOS. Open the help request for more details."
+        const status = 4
+        for (let i = 0; i < helpRequest.respondents.length; i++) {
+            const respondent = helpRequest.respondents[i]
+            const respondentUser = await getUserByID(respondent.userID)
+            await sendNotification(respondentUser, title, body, status)
+        }
+        res.status(200).send({
+            message: "SOS sent to all respondents."
         })
     } catch (err) {
         console.log(err)

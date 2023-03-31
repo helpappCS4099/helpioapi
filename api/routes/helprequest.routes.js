@@ -36,4 +36,9 @@ module.exports = function(app) {
         [userIsAuthorised, userIDAuthorised, canReadHelpRequest, requestIsActive, participatesInHelpRequest], 
         controller.updateLocation
     )
+    app.get(
+        "/helprequests/:requestID/sos",
+        [userIsAuthorised, canReadHelpRequest, requestIsActive,  isOwnerOfHelpRequest],
+        controller.sendSOS
+    )
 }
