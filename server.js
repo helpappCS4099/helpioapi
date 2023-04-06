@@ -6,6 +6,9 @@ const { connectDB } = require('./database')
 const cookieParser = require('cookie-parser')
 const io = require('socket.io')
 
+const swaggerUi = require('swagger-ui-express')
+const swaggerFile = require('./swagger_output.json')
+
 const HelpRequest = db.helprequest
 
 const {helpnsp} = require('./socketserver')
@@ -42,11 +45,13 @@ async function makeServerApp() {
     require("./api/routes/auth.routes")(app)
     require("./api/routes/user.routes")(app)
     require("./api/routes/helprequest.routes")(app)
+    app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
+    
     await connectDB()
     server = http.createServer(app)
 
     //namespace socket server at /ws/helprequests
-    io.set("transports", ["xhr-polling"])
+    // io.set("transports", ["xhr-polling"])
     socketserver = io(server).of(/^\/ws\/helprequests\/[\w-]+$/)
     socketserver.use(socketJwtAuth)
     socketserver.use(socketCanReadHelpRequest)

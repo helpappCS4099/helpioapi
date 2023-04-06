@@ -6,7 +6,8 @@
   "scripts": {
     "test": "NODE_ENV=test mocha ./test/index.tests.js --exit --delay",
     "start": "nodemon server.js",
-    "coverage": "nyc report --reporter=lcov npm test"
+    "coverage": "nyc report --reporter=lcov npm test",
+    "swagger-autogen": "node swagger.js"
   },
   "repository": {
     "type": "git",
@@ -43,6 +44,8 @@
     "nodemailer": "^6.9.1",
     "set-cookie-parser": "^2.5.1",
     "socket.io": "^4.6.1",
-    "socket.io-client": "^4.6.1"
+    "socket.io-client": "^4.6.1",
+    "swagger-autogen": "^2.23.1",
+    "swagger-ui-express": "^4.6.2"
   }
 }
