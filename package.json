@@ -38,6 +38,8 @@
     "expect-cookies": "^0.2.0",
     "express": "^4.18.2",
     "express-healthcheck": "^0.1.0",
+    "jsdoc": "^4.0.2",
+    "jsdoc3-bootstrap": "^0.15.0",
     "jsonwebtoken": "^9.0.0",
     "mocha": "^10.2.0",
     "mongoose": "^5.13.15",
