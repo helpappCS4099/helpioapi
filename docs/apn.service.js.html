@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: apn.service.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,41 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: apn.service.js</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const {getUserByID} = require("./user.service")
+const Errors = require("../utility/errors")
 
+/**
+ * Hey, this is a comment.
+ * @async
+ * @param {*} userID 
+ * @param {*} token 
+ */
+exports.setAPNToken = async (userID, token) => {
+    const user = await getUserByID(userID)
+    if (user === null) {
+        throw new Errors.UserNotFoundError("User not found")
+    }
+    if (user.verified === false) {
+        throw new Errors.UserNotVerifiedError("User not verified")
+    }
+    user.deviceToken = token
+    await user.save()
+}
 
-    <h3> </h3>
+// exports.sendNotification = async (toUser, title, body) => {
 
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
+// }</code></pre>
+        </article>
+    </section>
 
 
 
