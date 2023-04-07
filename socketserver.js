@@ -11,14 +11,11 @@ exports.helpnsp = (socket) => {
 
     let helpRequestID = socket.nsp.name.split('/')[3]
     socket.helpRequestID = helpRequestID
-
-
-    console.log("hey")
     
     socket.join(helpRequestID)
 
-    console.log('connected to help request namespace: ', helpRequestID)
-    console.log('userID stored in socket: ', socket.userID)
+    // console.log('connected to help request namespace: ', helpRequestID)
+    // console.log('userID stored in socket: ', socket.userID)
 
     socket.emit('update', {
         helpRequestID: helpRequestID,
@@ -39,7 +36,7 @@ exports.helpnsp = (socket) => {
     })
     
     socket.on('disconnect', () => {
-        console.log('disconnected from help request namespace: ', helpRequestID)
+        // console.log('disconnected from help request namespace: ', helpRequestID)
     })
 
     //register event handlers
@@ -47,28 +44,4 @@ exports.helpnsp = (socket) => {
     registerVictimSocketHandlers(socket)
     registerSharedSocketHandlers(socket)
 
-    // if (process.env.NODE_ENV !== 'test') {
-    //     HelpRequestChangeStream.on('change', (change) => {
-    //         if (change.operationType === 'update' && change.documentKey._id.toString() === helpRequestID) {
-    //             console.log('change stream triggered')
-    //             socket.broadcast.emit('update', {
-    //                 helpRequestID: change.fullDocument._id.toString(),
-    //                 owner: {
-    //                     userID: change.fullDocument.owner.userID,
-    //                     firstName: change.fullDocument.owner.firstName,
-    //                     lastName: change.fullDocument.owner.lastName,
-    //                     colorScheme: change.fullDocument.owner.colorScheme
-    //                 },
-    //                 isResolved: change.fullDocument.isResolved,
-    //                 category: change.fullDocument.category,
-    //                 currentStatus: change.fullDocument.currentStatus,
-    //                 startTime: change.fullDocument.startTime,
-    //                 endTime: change.fullDocument.endTime,
-    //                 location: change.fullDocument.location,
-    //                 respondents: change.fullDocument.respondents,
-    //                 messages: change.fullDocument.messages
-    //             })
-    //         }
-    //     })
-    // }
 }

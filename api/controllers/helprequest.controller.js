@@ -16,7 +16,7 @@ exports.getAvailableFriends = async (req, res) => {
             friends: availableFriends.friends
         })
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         res.status(500).send({
             message: "Something went wrong."
         })
@@ -49,7 +49,7 @@ exports.createHelpRequest = async (req, res) => {
                                                 respondents, 
                                                 messages
         )
-        console.log(helpRequest)
+        // console.log(helpRequest)
         //update user's current help request ID
         user.myCurrentHelpRequestID = helpRequest._id.toString()
         await user.save()
@@ -83,7 +83,7 @@ exports.createHelpRequest = async (req, res) => {
             respondents: helpRequest.respondents
         })
     } catch (err) {
-        console.log(err)
+        // console.log(err)
         res.status(500).send({
             message: "Internal Server Error"
         })
@@ -129,7 +129,7 @@ exports.acceptHelpRequest = async (req, res) => {
             respondents: updatedHelpRequest.respondents
         })
     } catch (err) {
-        console.log(err)
+        // console.log(err)
         res.status(500).send({
             message: "Internal Server Error"
         })
@@ -170,7 +170,7 @@ exports.resolveHelpRequest = async (req, res) => {
             respondents: helpRequest.respondents
         })
     } catch (err) {
-        console.log(err)
+        // console.log(err)
         res.status(500).send({
             message: "Internal Server Error"
         })
@@ -191,7 +191,7 @@ exports.updateLocation = async (req, res) => {
             longitude,
             helpRequest
         )
-        console.log("updated location via rest", longitude, latitude)
+        
         res.status(200).send({
             helpRequestID: helpRequest._id,
             messages: helpRequest.messages,
@@ -210,7 +210,7 @@ exports.updateLocation = async (req, res) => {
             respondents: helpRequest.respondents
         })
     } catch (err) {
-        console.log(err)
+        // console.log(err)
         res.status(500).send({
             message: "Internal Server Error"
         })
@@ -237,7 +237,7 @@ exports.sendSOS = async (req, res) => {
             message: "SOS sent to all respondents."
         })
     } catch (err) {
-        console.log(err)
+        // console.log(err)
         res.status(500).send({
             message: "Internal Server Error"
         })

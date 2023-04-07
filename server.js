@@ -24,13 +24,13 @@ var app = express()
 var HelpRequestChangeStream = null;
 
 mongoose.connection.on('open', function (ref) {
-    console.log('db connection fire')
+    // console.log('db connection fire')
     let db = mongoose.connection.db
     try {
         if (process.env.NODE_ENV != 'test') {
-            console.log("try to watch")
+            // console.log("try to watch")
             HelpRequestChangeStream = HelpRequest.watch()
-            console.log("watching")
+            // console.log("watching")
         }
     } catch (err) {
         console.log(err)
@@ -46,7 +46,7 @@ async function makeServerApp() {
     require("./api/routes/user.routes")(app)
     require("./api/routes/helprequest.routes")(app)
     app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
-    
+
     await connectDB()
     server = http.createServer(app)
 

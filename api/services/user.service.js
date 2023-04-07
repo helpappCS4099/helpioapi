@@ -21,16 +21,16 @@ exports.addNewUser = async (email, passwordHash, firstName, lastName) => {
     if (emailExists) {
         throw new UserWithThisEmailAlreadyExistsError()
     }
-    console.log("email is valid")
+    // console.log("email is valid")
     if (passwordHash === "" || firstName === "" || lastName === "" || email === "") {
         throw new InvalidUserDetailsError()
     }
-    console.log("fields are valid")
+    // console.log("fields are valid")
     const emailIsValid = String(email).toLowerCase().match(/^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@st-andrews.ac.uk$/)
     if (!emailIsValid) {
         throw new InvalidUserDetailsError()
     }
-    console.log("email is valid")
+    // console.log("email is valid")
     //randomly assign color scheme
     let colorSchemeCode = Math.floor(Math.random() * 5)
     const newUser = new User({
@@ -48,7 +48,7 @@ exports.addNewUser = async (email, passwordHash, firstName, lastName) => {
         colorScheme: colorSchemeCode
     })
     await newUser.save()
-    console.log("user saved", newUser)
+    // console.log("user saved", newUser)
     return newUser._id
 }
 
@@ -68,7 +68,7 @@ exports.getUserByID = async (userID) => {
         return user
     }
     catch(err) {
-        console.log(err)
+        // console.log(err)
         return null
     }
 }
@@ -121,7 +121,7 @@ exports.resolveFriendRequest = async (user1, user2, status1, status2) => {
         await user2.save()
         return user1
     } catch(err) {
-        console.log(err)
+        // console.log(err)
         return
     }
 }
@@ -140,7 +140,7 @@ exports.performSearch = async (searchString) => {
             }).exec()
             searchResults = regexSearchResults
         }
-        console.log("searchRes", searchResults)
+        // console.log("searchRes", searchResults)
         searchResults = searchResults.map(function(model) { return model.toObject(); })
         return searchResults.map(({
             _id: userID,
@@ -150,7 +150,7 @@ exports.performSearch = async (searchString) => {
             ...rest
           }));
     } catch(err) {
-        console.log(err)
+        // console.log(err)
         return []
     }
 }

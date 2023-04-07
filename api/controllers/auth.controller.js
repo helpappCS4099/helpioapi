@@ -11,13 +11,13 @@ exports.login = async (req, res) => {
     //check if email and password are valid
     const user = await getUserByEmail(email)
     if (user === null) {
-        console.log("no user")
+        // console.log("no user")
         return res.status(200).send({
             authenticated: false,
             message: "User not found"
         })
     }
-    console.log(user)
+    // console.log(user)
     const userPasswordHash = user.passwordHash
     const passwordMatches = await comparePassword(password, userPasswordHash)
     if (passwordMatches === false) {
@@ -63,17 +63,17 @@ exports.logout = async (req, res) => {
     res.clearCookie("jwt")
     //delete APN token
     await setAPNToken(req.userID, "")
-    console.log("logged out")
+    // console.log("logged out")
     return res.status(200).send({authenticated: false})
 }
 
 exports.createUser = async (req, res) => {
     try {
         //hash password
-        console.log("create user")
-        console.log(req.body)
+        // console.log("create user")
+        // console.log(req.body)
         const passwordHash = await hashPassword(req.body.password)
-        console.log("password hashed")
+        // console.log("password hashed")
         //create user
         const userID = await addNewUser(
             req.body.email,
@@ -119,7 +119,7 @@ exports.resendVerificationEmail = async (req, res) => {
         res.cookie("jwt", emailVerificationToken, { httpOnly: true })
         return res.status(200).send({hashWasRefreshed: true})
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return res.status(200).send({hashWasRefreshed: false})
     }
 }
@@ -142,7 +142,7 @@ exports.queryVerificationStatus = async (req, res) => {
             return res.status(200).send({userIsVerified: false})
         }
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return res.status(403).send({userIsVerified: false})
     }
 }
@@ -162,7 +162,7 @@ exports.checkEmail = async (req, res) => {
             return res.status(200).send({emailIsAvailable: true})
         }
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         //revise this error management
         return res.status(200).send({emailIsAvailable: false})
     }

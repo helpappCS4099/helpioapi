@@ -10,7 +10,7 @@ module.exports = (socket) => {
 
         socket.helpRequest = await service.getHelpRequest(socket.helpRequest._id)
 
-        console.log('updating location')
+        // console.log('updating location')
         const helpRequest = socket.helpRequest
 
         //check if user is owner of help request

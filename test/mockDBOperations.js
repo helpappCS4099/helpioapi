@@ -19,7 +19,8 @@ exports.mockUnverifiedUser = async function mockUnverifiedUser(email, password) 
         myCurrentHelpRequestID: "",
         respondingCurrentHelpRequestID: "",
         helpRequests: [],
-        deviceToken: ""
+        deviceToken: "",
+        colorScheme: 1
     })
     await mockUser.save()
     return mockUser._id
@@ -37,7 +38,8 @@ exports.mockVerifiedUserNoAPN = async function mockVerifiedUserNoAPN(email, pass
         myCurrentHelpRequestID: "",
         respondingCurrentHelpRequestID: "",
         helpRequests: [],
-        deviceToken: ""
+        deviceToken: "",
+        colorScheme: 1
     })
     await mockUser.save()
     return mockUser._id
@@ -56,7 +58,8 @@ exports.mockFullyVerifiedUser = async function mockFullyVerifiedUser(email, pass
         myCurrentHelpRequestID: "",
         respondingCurrentHelpRequestID: "",
         helpRequests: [],
-        deviceToken: "ejejndbf33000APNTDeviceToken"
+        deviceToken: "ejejndbf33000APNTDeviceToken",
+        colorScheme: 1
     })
     await mockUser.save()
     return mockUser._id
@@ -75,7 +78,8 @@ exports.mockAndReturnFullyVerifiedUser = async function mockFullyVerifiedUser(em
         myCurrentHelpRequestID: "",
         respondingCurrentHelpRequestID: "",
         helpRequests: [],
-        deviceToken: "ejejndbf33000APNTDeviceToken"
+        deviceToken: "ejejndbf33000APNTDeviceToken",
+        colorScheme: 1
     })
     await mockUser.save()
     return mockUser
@@ -107,6 +111,7 @@ exports.mockMyself = async (hasFriend = false) => {
         myCurrentHelpRequestID: '',
         respondingCurrentHelpRequestID: "",
         deviceToken: '8b03743418cd4582187113508f690a262b93cd0048cae1994ed88eab94071d65',
+        colorScheme: 1
     })
     await newUser.save()
     return newUser
@@ -134,6 +139,7 @@ exports.mockOtherUser = async (hasFriend = true) => {
         myCurrentHelpRequestID: '',
         respondingCurrentHelpRequestID: "",
         deviceToken: '8b03743418cd4582187113508f690a262b93cd0048cae1994ed88eab94071d66',
+        colorScheme: 1
     })
     await newUser.save()
     return newUser

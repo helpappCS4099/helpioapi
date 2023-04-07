@@ -21,7 +21,7 @@ exports.userIsEmailVerificationAuthorised = (req, res, next) => {
             })
         }
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return res.status(401).send({
             message: "Unauthorized!"
         })
@@ -51,7 +51,7 @@ exports.userIsAPNTokenAuthorised = (req, res, next) => {
             })
         }
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return res.status(401).send({
             message: "Unauthorized!"
         })
@@ -79,7 +79,7 @@ exports.userIsAuthorised = (req, res, next) => {
             throw new Error("Unauthorized!")
         }
     } catch(error) {
-        console.log(error)
+        // console.log(error)
         return res.status(401).send({
             message: "Unauthorized!"
         })
@@ -104,7 +104,7 @@ function getJWTFromAuthorizationHeader(header) {
 }
 
 exports.socketJwtAuth = (socket, next) => {
-    console.log("socketJwtAuth")
+    // console.log("socketJwtAuth")
     const token = socket.handshake.auth.token
     if (!token) {
         return next(new Error('Authentication error'))
@@ -121,7 +121,7 @@ exports.socketJwtAuth = (socket, next) => {
         }
     }
     catch (error) {
-        console.log(error)
+        // console.log(error)
         return next(new Error('Authentication error'))
     }
 }

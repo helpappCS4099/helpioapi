@@ -71,7 +71,7 @@ exports.sendEmailVerificationEmail = async (email, emailVerificationHash) => {
         
         transporter.sendMail(mailData, (error, info)=> {
             if (error) {
-                console.log(error)
+                // console.log(error)
                 reject(new Errors.EmailNotSentError())
             }
             resolve(true)

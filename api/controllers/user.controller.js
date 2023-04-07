@@ -52,12 +52,12 @@ exports.search = async (req, res) => {
             })
         }
         const searchResults = await performSearch(searchString)
-        console.log(searchResults)
+        // console.log(searchResults)
         return res.status(200).send({
             searchResults: searchResults
         })
     } catch(err) {
-        console.log(err)
+        // console.log(err)
         return res.status(500).send({
             message: "Internal server error"
         })
@@ -155,7 +155,7 @@ exports.friendRequest = async (req, res) => {
 
 
     } catch(err) {
-        console.log(err)
+        // console.log(err)
         return res.status(500).send({
             message: "Internal server error"
         })
@@ -200,7 +200,7 @@ exports.deleteFriend = async (req, res) => {
             }
         })
     } catch (err) {
-        console.log(err)
+        // console.log(err)
         return res.status(500).send({
             message: "Internal server error"
         })

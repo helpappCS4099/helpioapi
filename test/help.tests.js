@@ -422,7 +422,7 @@ describe("Help Request Tests", function () {
             const jwt = tokenService.generateAuthorisedToken(myself._id)
             const jwtFriend = tokenService.generateAuthorisedToken(friend._id)
             //create help request
-            const newHelpRequest = await service.newHelpRequest(
+            var newHelpRequest = await service.newHelpRequest(
                 myself._id,
                 myself.firstName,
                 1,
@@ -438,6 +438,8 @@ describe("Help Request Tests", function () {
                         ],
                         []
             )
+            newHelRequest = await service.updateRespondentStatus(newHelpRequest, friend._id.toString(), 1, friend.firstName)
+            
             //call update location endpoint
             const response = await request(app)
                 .post('/helprequests/' + newHelpRequest._id.toString() + "/" + friend._id.toString() + '/location')
@@ -514,14 +516,14 @@ describe("Help Request Tests", function () {
                     }
                 );
                 socket.once('connect', function () {
-                    console.log('connected')
+                    // console.log('connected')
                 })
                 socket.once('connect_error', function (err) {
-                    console.log('connect_error')
-                    console.log(err.req);      // the request object
-                    console.log(err.code);     // the error code, for example 1
-                    console.log(err.message);  // the error message, for example "Session ID unknown"
-                    console.log(err.context);  // some additional error context
+                    // console.log('connect_error')
+                    // console.log(err.req);      // the request object
+                    // console.log(err.code);     // the error code, for example 1
+                    // console.log(err.message);  // the error message, for example "Session ID unknown"
+                    // console.log(err.context);  // some additional error context
                     socket.disconnect()
                     reject(err)
                 })
@@ -580,11 +582,11 @@ describe("Help Request Tests", function () {
                 );
                 socket.once('connect', function () {})
                 socket.once('connect_error', function (err) {
-                    console.log('connect_error')
-                    console.log(err.req);      // the request object
-                    console.log(err.code);     // the error code, for example 1
-                    console.log(err.message);  // the error message, for example "Session ID unknown"
-                    console.log(err.context);  // some additional error context
+                    // console.log('connect_error')
+                    // console.log(err.req);      // the request object
+                    // console.log(err.code);     // the error code, for example 1
+                    // console.log(err.message);  // the error message, for example "Session ID unknown"
+                    // console.log(err.context);  // some additional error context
                     socket.disconnect()
                     reject(err)
                 })
@@ -598,17 +600,17 @@ describe("Help Request Tests", function () {
                 );
                 socket2.once('connect', function () {})
                 socket2.once('connect_error', function (err) {
-                    console.log('connect_error')
-                    console.log(err.req);      // the request object
-                    console.log(err.code);     // the error code, for example 1
-                    console.log(err.message);  // the error message, for example "Session ID unknown"
-                    console.log(err.context);  // some additional error context
+                    // console.log('connect_error')
+                    // console.log(err.req);      // the request object
+                    // console.log(err.code);     // the error code, for example 1
+                    // console.log(err.message);  // the error message, for example "Session ID unknown"
+                    // console.log(err.context);  // some additional error context
                     socket2.disconnect()
                     reject(err)
                 })
                 //listen for close event on socket2
                 socket2.once('helprequest: close', function (data) {
-                    console.log("close event received")
+                    // console.log("close event received")
                     resolve()
                 })
                 //resolve request on socket
@@ -657,11 +659,11 @@ describe("Help Request Tests", function () {
                 );
                 socket.once('connect', function () {})
                 socket.on('connect_error', function (err) {
-                    console.log('connect_error')
-                    console.log(err.req);      // the request object
-                    console.log(err.code);     // the error code, for example 1
-                    console.log(err.message);  // the error message, for example "Session ID unknown"
-                    console.log(err.context);  // some additional error context
+                    // console.log('connect_error')
+                    // console.log(err.req);      // the request object
+                    // console.log(err.code);     // the error code, for example 1
+                    // console.log(err.message);  // the error message, for example "Session ID unknown"
+                    // console.log(err.context);  // some additional error context
                     socket.disconnect()
                     reject(err)
                 })
@@ -675,11 +677,11 @@ describe("Help Request Tests", function () {
                 );
                 socket2.once('connect', function () {})
                 socket2.on('connect_error', function (err) {
-                    console.log('connect_error')
-                    console.log(err.req);      // the request object
-                    console.log(err.code);     // the error code, for example 1
-                    console.log(err.message);  // the error message, for example "Session ID unknown"
-                    console.log(err.context);  // some additional error context
+                    // console.log('connect_error')
+                    // console.log(err.req);      // the request object
+                    // console.log(err.code);     // the error code, for example 1
+                    // console.log(err.message);  // the error message, for example "Session ID unknown"
+                    // console.log(err.context);  // some additional error context
                     socket2.disconnect()
                     reject(err)
                 })
@@ -758,11 +760,11 @@ describe("Help Request Tests", function () {
                 );
                 socket.once('connect', function () {})
                 socket.on('connect_error', function (err) {
-                    console.log('connect_error')
-                    console.log(err.req);      // the request object
-                    console.log(err.code);     // the error code, for example 1
-                    console.log(err.message);  // the error message, for example "Session ID unknown"
-                    console.log(err.context);  // some additional error context
+                    // console.log('connect_error')
+                    // console.log(err.req);      // the request object
+                    // console.log(err.code);     // the error code, for example 1
+                    // console.log(err.message);  // the error message, for example "Session ID unknown"
+                    // console.log(err.context);  // some additional error context
                     socket.disconnect()
                     reject(err)
                 })
@@ -776,11 +778,11 @@ describe("Help Request Tests", function () {
                 );
                 socket2.once('connect', function () {})
                 socket2.on('connect_error', function (err) {
-                    console.log('connect_error')
-                    console.log(err.req);      // the request object
-                    console.log(err.code);     // the error code, for example 1
-                    console.log(err.message);  // the error message, for example "Session ID unknown"
-                    console.log(err.context);  // some additional error context
+                    // console.log('connect_error')
+                    // console.log(err.req);      // the request object
+                    // console.log(err.code);     // the error code, for example 1
+                    // console.log(err.message);  // the error message, for example "Session ID unknown"
+                    // console.log(err.context);  // some additional error context
                     socket2.disconnect()
                     reject(err)
                 })

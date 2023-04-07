@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>REST API</title>
+  <title>FriendGuard REST API</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="UTF-8" />
@@ -696,7 +696,7 @@ margin-bottom: 20px;
   <script>
     // Script section to load models into a JS Var
     var defs = {}
-        defs["body"] = {"type":"object","properties":{"email":{"example":"any"},"password":{"example":"any"}}};
+        defs["body"] = {"type":"object","properties":{"email":{"example":"ar303@st-andrews.ac.uk"},"password":{"example":"good_try"}}};
         defs["body_1"] = {"type":"object","properties":{"deviceToken":{"example":"any"}}};
         defs["body_2"] = {"type":"object","properties":{"category":{"example":"any"},"respondents":{"example":"any"},"messages":{"example":"any"}}};
         defs["body_3"] = {"type":"object","properties":{"longitude":{"example":"any"},"latitude":{"example":"any"}}};
@@ -777,7 +777,7 @@ margin-bottom: 20px;
       <div id="content">
         <div id="project">
           <div class="pull-left">
-            <h1>REST API</h1>
+            <h1>FriendGuard REST API</h1>
           </div>
           <div class="clearfix"></div>
         </div>
@@ -801,7 +801,7 @@ margin-bottom: 20px;
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked"></p>
+                        <p class="marked">Method for supplying a device APN token for notifications</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/apntoken</span></code></pre>
@@ -824,7 +824,7 @@ margin-bottom: 20px;
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Default-apntokenPost-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://localhost:3000/apntoken"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://helpapp.loca.lt/apntoken"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-apntokenPost-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -891,9 +891,9 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-apntokenPost-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var RestApi = require('rest_api');
+                              <pre class="prettyprint"><code class="language-js">var FriendGuardRestApi = require('friend_guard_rest_api');
 
-var api = new RestApi.DefaultApi()
+var api = new FriendGuardRestApi.DefaultApi()
 
 var opts = { 
   'accesstoken': accesstoken_example, // {String} 
@@ -1107,7 +1107,7 @@ $(document).ready(function() {
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked"></p>
+                        <p class="marked">endpoint for checking if a user has available friends that are unoccupied with another help request</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/helprequests/availableFriends</span></code></pre>
@@ -1130,7 +1130,7 @@ $(document).ready(function() {
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Default-helprequestsAvailableFriendsGet-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://localhost:3000/helprequests/availableFriends"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://helpapp.loca.lt/helprequests/availableFriends"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-helprequestsAvailableFriendsGet-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -1193,9 +1193,9 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-helprequestsAvailableFriendsGet-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var RestApi = require('rest_api');
+                              <pre class="prettyprint"><code class="language-js">var FriendGuardRestApi = require('friend_guard_rest_api');
 
-var api = new RestApi.DefaultApi()
+var api = new FriendGuardRestApi.DefaultApi()
 
 var opts = { 
   'accesstoken': accesstoken_example // {String} 
@@ -1363,7 +1363,7 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked"></p>
+                        <p class="marked">Endpoint for creating a help request</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/helprequests</span></code></pre>
@@ -1386,7 +1386,7 @@ except ApiException as e:
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Default-helprequestsPost-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://localhost:3000/helprequests"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://helpapp.loca.lt/helprequests"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-helprequestsPost-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -1453,9 +1453,9 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-helprequestsPost-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var RestApi = require('rest_api');
+                              <pre class="prettyprint"><code class="language-js">var FriendGuardRestApi = require('friend_guard_rest_api');
 
-var api = new RestApi.DefaultApi()
+var api = new FriendGuardRestApi.DefaultApi()
 
 var opts = { 
   'accesstoken': accesstoken_example, // {String} 
@@ -1669,7 +1669,7 @@ $(document).ready(function() {
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked"></p>
+                        <p class="marked">Close help request (for victim)</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/helprequests/{requestID}/resolve</span></code></pre>
@@ -1692,7 +1692,7 @@ $(document).ready(function() {
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Default-helprequestsRequestIDResolvePost-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://localhost:3000/helprequests/{requestID}/resolve"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://helpapp.loca.lt/helprequests/{requestID}/resolve"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-helprequestsRequestIDResolvePost-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -1759,9 +1759,9 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-helprequestsRequestIDResolvePost-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var RestApi = require('rest_api');
+                              <pre class="prettyprint"><code class="language-js">var FriendGuardRestApi = require('friend_guard_rest_api');
 
-var api = new RestApi.DefaultApi()
+var api = new FriendGuardRestApi.DefaultApi()
 
 var requestID = requestID_example; // {String} 
 
@@ -1978,7 +1978,7 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked"></p>
+                        <p class="marked">Send SOS notifications to all respondents (for victim)</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/helprequests/{requestID}/sos</span></code></pre>
@@ -2001,7 +2001,7 @@ except ApiException as e:
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Default-helprequestsRequestIDSosGet-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://localhost:3000/helprequests/{requestID}/sos"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://helpapp.loca.lt/helprequests/{requestID}/sos"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-helprequestsRequestIDSosGet-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -2068,9 +2068,9 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-helprequestsRequestIDSosGet-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var RestApi = require('rest_api');
+                              <pre class="prettyprint"><code class="language-js">var FriendGuardRestApi = require('friend_guard_rest_api');
 
-var api = new RestApi.DefaultApi()
+var api = new FriendGuardRestApi.DefaultApi()
 
 var requestID = requestID_example; // {String} 
 
@@ -2287,7 +2287,7 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked"></p>
+                        <p class="marked">Accept help request</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/helprequests/{requestID}/{userID1}/accept</span></code></pre>
@@ -2310,7 +2310,7 @@ except ApiException as e:
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Default-helprequestsRequestIDUserID1AcceptPost-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://localhost:3000/helprequests/{requestID}/{userID1}/accept"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://helpapp.loca.lt/helprequests/{requestID}/{userID1}/accept"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-helprequestsRequestIDUserID1AcceptPost-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -2381,9 +2381,9 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-helprequestsRequestIDUserID1AcceptPost-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var RestApi = require('rest_api');
+                              <pre class="prettyprint"><code class="language-js">var FriendGuardRestApi = require('friend_guard_rest_api');
 
-var api = new RestApi.DefaultApi()
+var api = new FriendGuardRestApi.DefaultApi()
 
 var requestID = requestID_example; // {String} 
 
@@ -2634,7 +2634,7 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked"></p>
+                        <p class="marked">Location update fallback when the sockets are disconnected</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/helprequests/{requestID}/{userID1}/location</span></code></pre>
@@ -2657,7 +2657,7 @@ except ApiException as e:
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Default-helprequestsRequestIDUserID1LocationPost-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://localhost:3000/helprequests/{requestID}/{userID1}/location"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://helpapp.loca.lt/helprequests/{requestID}/{userID1}/location"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-helprequestsRequestIDUserID1LocationPost-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -2732,9 +2732,9 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-helprequestsRequestIDUserID1LocationPost-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var RestApi = require('rest_api');
+                              <pre class="prettyprint"><code class="language-js">var FriendGuardRestApi = require('friend_guard_rest_api');
 
-var api = new RestApi.DefaultApi()
+var api = new FriendGuardRestApi.DefaultApi()
 
 var requestID = requestID_example; // {String} 
 
@@ -3023,7 +3023,7 @@ $(document).ready(function() {
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked"></p>
+                        <p class="marked">An endpoint for supplying login credentials and authenticating to the app</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/login</span></code></pre>
@@ -3046,7 +3046,7 @@ $(document).ready(function() {
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Default-loginPost-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://localhost:3000/login"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://helpapp.loca.lt/login"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-loginPost-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -3109,9 +3109,9 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-loginPost-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var RestApi = require('rest_api');
+                              <pre class="prettyprint"><code class="language-js">var FriendGuardRestApi = require('friend_guard_rest_api');
 
-var api = new RestApi.DefaultApi()
+var api = new FriendGuardRestApi.DefaultApi()
 
 var opts = { 
   'body':  // {Body} 
@@ -3280,7 +3280,7 @@ $(document).ready(function() {
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked"></p>
+                        <p class="marked">Endpoint for logging out of the app, resets the users APN token</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/logout</span></code></pre>
@@ -3303,7 +3303,7 @@ $(document).ready(function() {
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Default-logoutGet-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://localhost:3000/logout"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://helpapp.loca.lt/logout"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-logoutGet-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -3366,9 +3366,9 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-logoutGet-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var RestApi = require('rest_api');
+                              <pre class="prettyprint"><code class="language-js">var FriendGuardRestApi = require('friend_guard_rest_api');
 
-var api = new RestApi.DefaultApi()
+var api = new FriendGuardRestApi.DefaultApi()
 
 var opts = { 
   'accesstoken': accesstoken_example // {String} 
@@ -3528,7 +3528,7 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked"></p>
+                        <p class="marked">Endpoint for verifying if an email is in use or available</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/users/email</span></code></pre>
@@ -3551,7 +3551,7 @@ except ApiException as e:
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Default-usersEmailGet-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://localhost:3000/users/email?email="</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://helpapp.loca.lt/users/email?email="</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-usersEmailGet-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -3614,9 +3614,9 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-usersEmailGet-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var RestApi = require('rest_api');
+                              <pre class="prettyprint"><code class="language-js">var FriendGuardRestApi = require('friend_guard_rest_api');
 
-var api = new RestApi.DefaultApi()
+var api = new FriendGuardRestApi.DefaultApi()
 
 var opts = { 
   'email': email_example // {String} 
@@ -3768,7 +3768,7 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked"></p>
+                        <p class="marked">Endpoint for full or partial indexed search over the DB</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/users</span></code></pre>
@@ -3791,7 +3791,7 @@ except ApiException as e:
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Default-usersGet-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://localhost:3000/users?search="</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://helpapp.loca.lt/users?search="</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-usersGet-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -3858,9 +3858,9 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-usersGet-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var RestApi = require('rest_api');
+                              <pre class="prettyprint"><code class="language-js">var FriendGuardRestApi = require('friend_guard_rest_api');
 
-var api = new RestApi.DefaultApi()
+var api = new FriendGuardRestApi.DefaultApi()
 
 var opts = { 
   'accesstoken': accesstoken_example, // {String} 
@@ -4057,7 +4057,7 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked"></p>
+                        <p class="marked">get my user object</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/users/me</span></code></pre>
@@ -4080,7 +4080,7 @@ except ApiException as e:
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Default-usersMeGet-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://localhost:3000/users/me"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://helpapp.loca.lt/users/me"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-usersMeGet-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -4143,9 +4143,9 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-usersMeGet-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var RestApi = require('rest_api');
+                              <pre class="prettyprint"><code class="language-js">var FriendGuardRestApi = require('friend_guard_rest_api');
 
-var api = new RestApi.DefaultApi()
+var api = new FriendGuardRestApi.DefaultApi()
 
 var opts = { 
   'accesstoken': accesstoken_example // {String} 
@@ -4313,7 +4313,7 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked"></p>
+                        <p class="marked">Used for cancelling friend requests and removing users</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="delete"><code><span class="pln">/users/{userID1}/friends/{userID2}</span></code></pre>
@@ -4336,7 +4336,7 @@ except ApiException as e:
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Default-usersUserID1FriendsUserID2Delete-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X DELETE "http://localhost:3000/users/{userID1}/friends/{userID2}"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X DELETE "http://helpapp.loca.lt/users/{userID1}/friends/{userID2}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-usersUserID1FriendsUserID2Delete-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -4407,9 +4407,9 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-usersUserID1FriendsUserID2Delete-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var RestApi = require('rest_api');
+                              <pre class="prettyprint"><code class="language-js">var FriendGuardRestApi = require('friend_guard_rest_api');
 
-var api = new RestApi.DefaultApi()
+var api = new FriendGuardRestApi.DefaultApi()
 
 var userID1 = userID1_example; // {String} 
 
@@ -4652,7 +4652,7 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked"></p>
+                        <p class="marked">Multi-purpose endpoint. It is used for sending a friend request. When IDs are swapped, the help request would be resolved</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/users/{userID1}/friends/{userID2}</span></code></pre>
@@ -4675,7 +4675,7 @@ except ApiException as e:
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Default-usersUserID1FriendsUserID2Post-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://localhost:3000/users/{userID1}/friends/{userID2}"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://helpapp.loca.lt/users/{userID1}/friends/{userID2}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-usersUserID1FriendsUserID2Post-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -4746,9 +4746,9 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-usersUserID1FriendsUserID2Post-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var RestApi = require('rest_api');
+                              <pre class="prettyprint"><code class="language-js">var FriendGuardRestApi = require('friend_guard_rest_api');
 
-var api = new RestApi.DefaultApi()
+var api = new FriendGuardRestApi.DefaultApi()
 
 var userID1 = userID1_example; // {String} 
 
@@ -4991,7 +4991,7 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked"></p>
+                        <p class="marked">get a user by their ID</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/users/{userID}</span></code></pre>
@@ -5014,7 +5014,7 @@ except ApiException as e:
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Default-usersUserIDGet-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://localhost:3000/users/{userID}"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://helpapp.loca.lt/users/{userID}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-usersUserIDGet-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -5081,9 +5081,9 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-usersUserIDGet-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var RestApi = require('rest_api');
+                              <pre class="prettyprint"><code class="language-js">var FriendGuardRestApi = require('friend_guard_rest_api');
 
-var api = new RestApi.DefaultApi()
+var api = new FriendGuardRestApi.DefaultApi()
 
 var userID = userID_example; // {String} 
 
@@ -5284,7 +5284,7 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked"></p>
+                        <p class="marked">endpoint for manually querying the verification status of a user</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/verification</span></code></pre>
@@ -5307,7 +5307,7 @@ except ApiException as e:
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Default-verificationGet-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://localhost:3000/verification"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://helpapp.loca.lt/verification"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-verificationGet-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -5367,9 +5367,9 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-verificationGet-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var RestApi = require('rest_api');
+                              <pre class="prettyprint"><code class="language-js">var FriendGuardRestApi = require('friend_guard_rest_api');
 
-var api = new RestApi.DefaultApi()
+var api = new FriendGuardRestApi.DefaultApi()
 
 var callback = function(error, data, response) {
   if (error) {
@@ -5505,7 +5505,7 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked"></p>
+                        <p class="marked">endpoint for verifying email. Following this endpoint would resolve the user to verified</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/verification/{hash}</span></code></pre>
@@ -5528,7 +5528,7 @@ except ApiException as e:
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Default-verificationHashGet-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://localhost:3000/verification/{hash}"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET "http://helpapp.loca.lt/verification/{hash}"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-verificationHashGet-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -5591,9 +5591,9 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-verificationHashGet-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var RestApi = require('rest_api');
+                              <pre class="prettyprint"><code class="language-js">var FriendGuardRestApi = require('friend_guard_rest_api');
 
-var api = new RestApi.DefaultApi()
+var api = new FriendGuardRestApi.DefaultApi()
 
 var hash = hash_example; // {String} 
 
@@ -5755,7 +5755,7 @@ except ApiException as e:
                         <div class="pull-right"></div>
                         <div class="clearfix"></div>
                         <p></p>
-                        <p class="marked"></p>
+                        <p class="marked">sending a request for verification, sent during account creation or when requesting resending an email</p>
                         <p></p>
                         <br />
                         <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/verification</span></code></pre>
@@ -5778,7 +5778,7 @@ except ApiException as e:
 
                         <div class="tab-content">
                           <div class="tab-pane active" id="examples-Default-verificationPost-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://localhost:3000/verification"</code></pre>
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST "http://helpapp.loca.lt/verification"</code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-verificationPost-0-java">
                             <pre class="prettyprint"><code class="language-java">import io.swagger.client.*;
@@ -5838,9 +5838,9 @@ DefaultApi *apiInstance = [[DefaultApi alloc] init];
                             </div>
 
                             <div class="tab-pane" id="examples-Default-verificationPost-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var RestApi = require('rest_api');
+                              <pre class="prettyprint"><code class="language-js">var FriendGuardRestApi = require('friend_guard_rest_api');
 
-var api = new RestApi.DefaultApi()
+var api = new FriendGuardRestApi.DefaultApi()
 
 var callback = function(error, data, response) {
   if (error) {

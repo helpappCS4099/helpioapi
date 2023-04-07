@@ -9,7 +9,7 @@ module.exports = (socket) => {
 
         //confirm payload ID matches the token
         if (payload.respondentID !== socket.userID) {
-            console.log('payload ID does not match token ID')
+            // console.log('payload ID does not match token ID')
             return
         }
         socket.helpRequest = await service.getHelpRequest(socket.helpRequest._id)
@@ -84,7 +84,7 @@ module.exports = (socket) => {
     })
     socket.on('helprequest: reject', async (payload) => {
         let status = -1
-        console.log("rejecting help request")
+        // console.log("rejecting help request")
         await updateStatus(payload, status)
     })
     socket.on('helprequest: ontheway', async (payload) => {

@@ -32,14 +32,14 @@ exports.updateAPNToken = async (req, res) => {
             jwt: authorisedToken
         })
     } catch(error) {
-        console.log(error)
+        // console.log(error)
         return res.status(500).send({apnTokenWasUpdated: false})
     }
 }
 
 exports.sendNotification = async (toUser, title, body, status) => {
     if (toUser.deviceToken === undefined || toUser.deviceToken === "") {
-        console.log("User has no device token")
+        // console.log("User has no device token")
         return
     }
     try {
@@ -55,7 +55,7 @@ exports.sendNotification = async (toUser, title, body, status) => {
         const result = await this.apnProvider.send(note, [toUser.deviceToken])
         return
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return
     }
 }
