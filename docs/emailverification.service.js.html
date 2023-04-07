@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: emailverification.service.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: emailverification.service.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const VerificationHash = require('../models/verificationHash.model')
+const { getUserByID } = require('./user.service')
+const Errors = require('../utility/errors')
+const { hashPassword } = require('./auth.service')
+const authConfig = require('../../config/auth.config')
+const nodemailer = require("nodemailer")
+
+/**
+ * Creates a hash to be used for the verification URL
+ *   
+ */
+exports.generateEmailVerificationHash = async () => {
+    const emailVerificationHash = await hashPassword(Date.now().toString())
+    const urlFriendly = emailVerificationHash.replace(/[^a-z0-9_]+/gi, '-').replace(/^-|-$/g, '').toLowerCase()
+    return urlFriendly
+}
+
+/**
+ * saves the verification hash and corresponding userID 
+ * @param {*} userID 
+ *   
+ */
+exports.setEmailVerificationHash = async (userID) => {
+    const emailVerificationHash = await this.generateEmailVerificationHash()
+    await this.clearEmailVerificationHash(userID)
+    const verificationRecord = new VerificationHash({
+        hash: emailVerificationHash,
+        userID: userID
+    })
+    await verificationRecord.save()
+    return emailVerificationHash
+}
+
+/**
+ * Deletes the verification hash
+ * @param {*} userID 
+ */
+exports.clearEmailVerificationHash = async (userID) => {
+    await VerificationHash.deleteOne({userID: userID}).catch(err => console.log(err))
+}
+
+/**
+ * queries the user by verification hash
+ * @param {*} emailVerificationHash 
+ *   
+ */
+exports.getUserByEmailVerificationHash = async (emailVerificationHash) => {
+    const verificationRecord = await VerificationHash.findOne({hash: emailVerificationHash})
+    if (verificationRecord === null) {
+        return null
+    }
+    const user = await getUserByID(verificationRecord.userID)
+    return user
+}
+
+/**
+ * checks the DB for the hash and verifies the corresponding user
+ * @param {*} emailVerificationHash 
+ *   
+ */
+exports.verifyEmail = async (emailVerificationHash) => {
+    const user = await this.getUserByEmailVerificationHash(emailVerificationHash)
+    if (user === null) {
+        throw new Errors.NoVerificationHasBeenRequestedError()
+    }
+    user.verified = true
+    await user.save()
+    this.clearEmailVerificationHash(user._id)
+    return user._id
+}
+
+/**
+ * Nodemailer Transporter
+ */
+const transporter = nodemailer.createTransport({
+    port: 465,
+    host: "smtp.gmail.com",
+    auth: {
+        user: authConfig.gmailAddress,
+        pass: authConfig.gmailAppPassword,
+    },
+    secure: true,
+    tls: {
+        rejectUnauthorized: true    //reject non-encrypted emailing
+    }
+})
+
+/**
+ * function that sends an email verification email to the user via nodemailer
+ * @param {*} email 
+ * @param {*} emailVerificationHash 
+ *   
+ */
+exports.sendEmailVerificationEmail = async (email, emailVerificationHash) => {
+    return new Promise((resolve, reject)=> {
+        const mailData = {
+            from: authConfig.gmailAddress,
+            to: email,
+            subject: "Email Verification",
+            html: `&lt;h1>Click &lt;a href="${authConfig.rootURL}/verification/${emailVerificationHash}">here&lt;/a> to verify your email&lt;/h1>`,
+        }
+        
+        transporter.sendMail(mailData, (error, info)=> {
+            if (error) {
+                // console.log(error)
+                reject(new Errors.EmailNotSentError())
+            }
+            resolve(true)
+        })
+    })
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addFriend">addFriend</a></li><li><a href="global.html#addNewUser">addNewUser</a></li><li><a href="global.html#clearEmailVerificationHash">clearEmailVerificationHash</a></li><li><a href="global.html#comparePassword">comparePassword</a></li><li><a href="global.html#decodeToken">decodeToken</a></li><li><a href="global.html#friendsNotInHelpRequest">friendsNotInHelpRequest</a></li><li><a href="global.html#generateAPNToken">generateAPNToken</a></li><li><a href="global.html#generateAuthorisedToken">generateAuthorisedToken</a></li><li><a href="global.html#generateEmailVerificationHash">generateEmailVerificationHash</a></li><li><a href="global.html#generateEmailVerificationToken">generateEmailVerificationToken</a></li><li><a href="global.html#getHelpRequest">getHelpRequest</a></li><li><a href="global.html#getStatusMessageTuple">getStatusMessageTuple</a></li><li><a href="global.html#getUserByEmail">getUserByEmail</a></li><li><a href="global.html#getUserByEmailVerificationHash">getUserByEmailVerificationHash</a></li><li><a href="global.html#getUserByID">getUserByID</a></li><li><a href="global.html#hashPassword">hashPassword</a></li><li><a href="global.html#matchEmailInDB">matchEmailInDB</a></li><li><a href="global.html#newHelpRequest">newHelpRequest</a></li><li><a href="global.html#performSearch">performSearch</a></li><li><a href="global.html#pushLocationUpdate">pushLocationUpdate</a></li><li><a href="global.html#removeFriendRecords">removeFriendRecords</a></li><li><a href="global.html#removeUser">removeUser</a></li><li><a href="global.html#resolveAndSaveHelpRequest">resolveAndSaveHelpRequest</a></li><li><a href="global.html#resolveFriendRequest">resolveFriendRequest</a></li><li><a href="global.html#sendEmailVerificationEmail">sendEmailVerificationEmail</a></li><li><a href="global.html#setAPNToken">setAPNToken</a></li><li><a href="global.html#setEmailVerificationHash">setEmailVerificationHash</a></li><li><a href="global.html#transporter">transporter</a></li><li><a href="global.html#updateRespondentStatus">updateRespondentStatus</a></li><li><a href="global.html#userIsInFriendsArray">userIsInFriendsArray</a></li><li><a href="global.html#verifyEmail">verifyEmail</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Apr 07 2023 18:37:40 GMT+0100 (British Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

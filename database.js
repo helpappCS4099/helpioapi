@@ -3,6 +3,9 @@ const dbConfig = require('./config/db.config')
 const { MongoMemoryServer, MongoMemoryReplSet } = require('mongodb-memory-server');
 let mongod = null;
 
+/**
+ * Database connection routine, including a test environment route for memory server connection
+ */
 const connectDB = async () => {
   console.log("connectDB called")
   try {

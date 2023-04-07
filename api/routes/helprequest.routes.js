@@ -2,6 +2,10 @@ const controller = require("../controllers/helprequest.controller")
 const { participatesInHelpRequest, isOwnerOfHelpRequest, requestIsActive, canReadHelpRequest } = require("../middlewares/help.mwr")
 const { userIsAuthorised, userIDAuthorised } = require("../middlewares/jwt.mwr")
 
+/**
+ * Routes for help request functionality
+ * @param {*} app 
+ */
 module.exports = function(app) {
     app.use(function(req,res,next) {
         res.header(

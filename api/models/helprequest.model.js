@@ -1,5 +1,8 @@
 const mongoose = require("mongoose")
 
+/**
+ * Help Requets Model
+ */
 const HelpRequest = mongoose.model(
     "HelpRequest",
     new mongoose.Schema({

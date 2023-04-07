@@ -2,6 +2,11 @@ const jwt = require('jsonwebtoken')
 const authConfig = require('../../config/auth.config')
 const Errors = require('../utility/errors')
 
+/**
+ * JWT  for email verification
+ * @param {*} userID 
+ *   
+ */
 exports.generateEmailVerificationToken = (userID) => {
     const token = jwt.sign(
         {
@@ -13,6 +18,11 @@ exports.generateEmailVerificationToken = (userID) => {
     return token
 }
 
+/**
+ * JWT for APN token submission
+ * @param {*} userID 
+ *   
+ */
 exports.generateAPNToken = (userID) => {
     const token = jwt.sign(
         {
@@ -24,6 +34,11 @@ exports.generateAPNToken = (userID) => {
     return token
 }
 
+/**
+ * JWT for app wide clearance
+ * @param {*} userID 
+ *   
+ */
 exports.generateAuthorisedToken = (userID) => {
     const token = jwt.sign(
         {
@@ -35,6 +50,11 @@ exports.generateAuthorisedToken = (userID) => {
     return token
 }
 
+/**
+ * Decodes the token and checks that it is not expired
+ * @param {*} token 
+ *   
+ */
 exports.decodeToken = (token) => {
     try {
         const decoded = jwt.verify(token, authConfig.jwtSecret)

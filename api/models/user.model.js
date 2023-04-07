@@ -1,5 +1,8 @@
 const mongoose = require("mongoose")
 
+/**
+ * User Model
+ */
 const User = mongoose.model(
     "User",
     new mongoose.Schema({

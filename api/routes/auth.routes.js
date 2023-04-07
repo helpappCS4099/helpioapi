@@ -2,6 +2,10 @@ const controller = require("../controllers/auth.controller")
 const apnController = require("../controllers/apn.controller")
 const { userIsAuthorised, userIsEmailVerificationAuthorised, userIsAPNTokenAuthorised } = require("../middlewares/jwt.mwr")
 
+/**
+ * Routes for authentication
+ * @param {*} app 
+ */
 module.exports = function(app) {
     app.use(function(req,res,next) {
         res.header(

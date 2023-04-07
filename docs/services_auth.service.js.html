@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>FriendGuard Web Service Logic Docs</title>
+    <title>JSDoc: Source: services/auth.service.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,46 @@
 
 <div id="main">
 
-    <h1 class="page-title">Explore most of the logic on the webservice for FriendGuard</h1>
+    <h1 class="page-title">Source: services/auth.service.js</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const bcrypt = require('bcrypt')
+
+/**
+ * BCRYPT hashing of data
+ * @param {*} password 
+ * 
+ */
+exports.hashPassword = async (password) => {
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(password, salt)
+    return hashedPassword
+}
+
+/**
+ * BCRYPT cleartext and hash validation
+ * @param {*} password 
+ * @param {*} hashedPassword 
+ * 
+ */
+exports.comparePassword = async (password, hashedPassword) => {
+    const match = await bcrypt.compare(password, hashedPassword)
+    return match
+}
 
 
-    <h3> </h3>
 
 
 
-
-
-
-
-
-
-
-    
-
-
-
-
-
+</code></pre>
+        </article>
+    </section>
 
 
 

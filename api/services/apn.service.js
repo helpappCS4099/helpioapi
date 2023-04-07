@@ -2,7 +2,7 @@ const {getUserByID} = require("./user.service")
 const Errors = require("../utility/errors")
 
 /**
- * Hey, this is a comment.
+ * Method for mutating the APN token for the user
  * @async
  * @param {*} userID 
  * @param {*} token 

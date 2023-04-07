@@ -17,6 +17,9 @@ var options = {
     production: false
 }
 
+/**
+ * APN apple push notification service provider
+ */
 exports.apnProvider = new apn.Provider(options)
 
 exports.updateAPNToken = async (req, res) => {
@@ -37,6 +40,14 @@ exports.updateAPNToken = async (req, res) => {
     }
 }
 
+/**
+ * Reusable method for sending a push notification to the user
+ * @param {UserModel} toUser 
+ * @param {String} title 
+ * @param {String} body 
+ * @param {Int} status 
+ *   
+ */
 exports.sendNotification = async (toUser, title, body, status) => {
     if (toUser.deviceToken === undefined || toUser.deviceToken === "") {
         // console.log("User has no device token")

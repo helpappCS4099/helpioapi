@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: apn.service.js</title>
+    <title>JSDoc: Source: auth.service.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: apn.service.js</h1>
+    <h1 class="page-title">Source: auth.service.js</h1>
 
     
 
@@ -26,30 +26,35 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>const {getUserByID} = require("./user.service")
-const Errors = require("../utility/errors")
+            <pre class="prettyprint source linenums"><code>const bcrypt = require('bcrypt')
 
 /**
- * Method for mutating the APN token for the user
- * @async
- * @param {*} userID 
- * @param {*} token 
+ * BCRYPT hashing of data
+ * @param {*} password 
+ * 
  */
-exports.setAPNToken = async (userID, token) => {
-    const user = await getUserByID(userID)
-    if (user === null) {
-        throw new Errors.UserNotFoundError("User not found")
-    }
-    if (user.verified === false) {
-        throw new Errors.UserNotVerifiedError("User not verified")
-    }
-    user.deviceToken = token
-    await user.save()
+exports.hashPassword = async (password) => {
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(password, salt)
+    return hashedPassword
 }
 
-// exports.sendNotification = async (toUser, title, body) => {
+/**
+ * BCRYPT cleartext and hash validation
+ * @param {*} password 
+ * @param {*} hashedPassword 
+ * 
+ */
+exports.comparePassword = async (password, hashedPassword) => {
+    const match = await bcrypt.compare(password, hashedPassword)
+    return match
+}
 
-// }</code></pre>
+
+
+
+
+</code></pre>
         </article>
     </section>
 

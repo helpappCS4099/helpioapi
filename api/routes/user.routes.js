@@ -1,6 +1,10 @@
 const controller = require("../controllers/user.controller")
 const { userIsAuthorised, userIDAuthorised } = require("../middlewares/jwt.mwr")
 
+/**
+ * Routes for user functionality
+ * @param {*} app 
+ */
 module.exports = function(app) {
     app.use(function(req,res,next) {
         res.header(

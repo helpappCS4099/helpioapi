@@ -37,6 +37,10 @@ mongoose.connection.on('open', function (ref) {
     }
 })
 
+/**
+ * routine for initialising the server and connecting all routes + establishing the dynamic namespace socker.io instance
+ *   
+ */
 async function makeServerApp() {
     app.use(express.json())
     app.use(express.urlencoded({ extended: true }))

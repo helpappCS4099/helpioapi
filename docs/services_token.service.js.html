@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>FriendGuard Web Service Logic Docs</title>
+    <title>JSDoc: Source: services/token.service.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,89 @@
 
 <div id="main">
 
-    <h1 class="page-title">Explore most of the logic on the webservice for FriendGuard</h1>
+    <h1 class="page-title">Source: services/token.service.js</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const jwt = require('jsonwebtoken')
+const authConfig = require('../../config/auth.config')
+const Errors = require('../utility/errors')
 
+/**
+ * JWT  for email verification
+ * @param {*} userID 
+ *   
+ */
+exports.generateEmailVerificationToken = (userID) => {
+    const token = jwt.sign(
+        {
+            userID: userID,
+            access: 'emailVerification'
+        }, 
+        authConfig.jwtSecret, 
+        {expiresIn: '10m'})
+    return token
+}
 
-    <h3> </h3>
+/**
+ * JWT for APN token submission
+ * @param {*} userID 
+ *   
+ */
+exports.generateAPNToken = (userID) => {
+    const token = jwt.sign(
+        {
+            userID: userID,
+            access: 'apnToken'
+        },
+        authConfig.jwtSecret,
+        {expiresIn: '10m'})
+    return token
+}
 
+/**
+ * JWT for app wide clearance
+ * @param {*} userID 
+ *   
+ */
+exports.generateAuthorisedToken = (userID) => {
+    const token = jwt.sign(
+        {
+            userID: userID,
+            access: 'authorised'
+        },
+        authConfig.jwtSecret,
+        {expiresIn: '180d'})
+    return token
+}
 
+/**
+ * Decodes the token and checks that it is not expired
+ * @param {*} token 
+ *   
+ */
+exports.decodeToken = (token) => {
+    try {
+        const decoded = jwt.verify(token, authConfig.jwtSecret)
+        return decoded
+    } catch(err) {
+        if (err instanceof jwt.TokenExpiredError) {
+            throw new Errors.TokenExpiredError("Token expired")
+        } else {
+            //jsonwebtokenerror; notbeforeerror; 
+            throw new Errors.InvalidTokenError()
+        }
+    }
+}
 
-
-
-
-
-
-
-
-    
-
-
-
-
-
+</code></pre>
+        </article>
+    </section>
 
 
 

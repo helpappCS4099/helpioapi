@@ -1,4 +1,32 @@
-const HelpRequest = require("../models/helprequest.model")
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: helprequest.service.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: helprequest.service.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const HelpRequest = require("../models/helprequest.model")
 const { getUserByID } = require("./user.service")
 
 
@@ -25,7 +53,7 @@ exports.friendsNotInHelpRequest = async (user) => {
             friends: []
         }
     }
-    for (let i = 0; i < friends.length; i++) {
+    for (let i = 0; i &lt; friends.length; i++) {
         const friend = friends[i]
         const friendUser = await getUserByID(friend.userID)
         if (friendUser.myCurrentHelpRequestID !== '' || friendUser.respondingCurrentHelpRequestID !== "") {
@@ -65,7 +93,7 @@ exports.newHelpRequest = async (
     const user = await getUserByID(userID)
     //transform messages to the DB format
     var messagesDB = []
-    for (let i = 0; i < messages.length; i++) {
+    for (let i = 0; i &lt; messages.length; i++) {
         const message = messages[i]
         messagesDB.push({
             userID: userID,
@@ -99,7 +127,7 @@ exports.newHelpRequest = async (
     })
     await helpRequest.save()
     //for each respondent, add request ID to respondent current HR ID
-    for (let i = 0; i < respondents.length; i++) {
+    for (let i = 0; i &lt; respondents.length; i++) {
         const respondent = respondents[i]
         const respondentUser = await getUserByID(respondent.userID)
         respondentUser.respondingCurrentHelpRequestID = helpRequest._id.toString()
@@ -134,7 +162,7 @@ exports.pushLocationUpdate = async (
         })
     } else {
         //respondent
-        for (let i = 0; i < helpRequestObject.respondents.length; i++) {
+        for (let i = 0; i &lt; helpRequestObject.respondents.length; i++) {
             const respondent = helpRequestObject.respondents[i]
             if (respondent.userID === userID) {
                 respondent.location.push({
@@ -201,12 +229,12 @@ exports.updateRespondentStatus = async (
     status,
     firstName
 ) => {
-    for (let i = 0; i < helpRequestObject.respondents.length; i++) {
+    for (let i = 0; i &lt; helpRequestObject.respondents.length; i++) {
         const respondent = helpRequestObject.respondents[i]
         if (respondent.userID === userID) {
             respondent.status = status
             if (status === -1) break
-            if (status < helpRequestObject.currentStatus.progressStatus) break
+            if (status &lt; helpRequestObject.currentStatus.progressStatus) break
             helpRequestObject.currentStatus.progressStatus = status
             helpRequestObject.currentStatus.progressMessageOwner = this.getStatusMessageTuple(
                 status,
@@ -238,7 +266,7 @@ exports.resolveAndSaveHelpRequest = async (helpRequestObject) => {
     ownerUser.helpRequests.push(helpRequestObject.toObject())
     await ownerUser.save()
     //save to respondents
-    for (let i = 0; i < helpRequestObject.respondents.length; i++) {
+    for (let i = 0; i &lt; helpRequestObject.respondents.length; i++) {
         const respondent = helpRequestObject.respondents[i]
         const respondentUser = await getUserByID(respondent.userID)
         respondentUser.respondingCurrentHelpRequestID = ""
@@ -246,4 +274,26 @@ exports.resolveAndSaveHelpRequest = async (helpRequestObject) => {
         await respondentUser.save()
     }
     return helpRequestObject
-}
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addFriend">addFriend</a></li><li><a href="global.html#addNewUser">addNewUser</a></li><li><a href="global.html#clearEmailVerificationHash">clearEmailVerificationHash</a></li><li><a href="global.html#comparePassword">comparePassword</a></li><li><a href="global.html#decodeToken">decodeToken</a></li><li><a href="global.html#friendsNotInHelpRequest">friendsNotInHelpRequest</a></li><li><a href="global.html#generateAPNToken">generateAPNToken</a></li><li><a href="global.html#generateAuthorisedToken">generateAuthorisedToken</a></li><li><a href="global.html#generateEmailVerificationHash">generateEmailVerificationHash</a></li><li><a href="global.html#generateEmailVerificationToken">generateEmailVerificationToken</a></li><li><a href="global.html#getHelpRequest">getHelpRequest</a></li><li><a href="global.html#getStatusMessageTuple">getStatusMessageTuple</a></li><li><a href="global.html#getUserByEmail">getUserByEmail</a></li><li><a href="global.html#getUserByEmailVerificationHash">getUserByEmailVerificationHash</a></li><li><a href="global.html#getUserByID">getUserByID</a></li><li><a href="global.html#hashPassword">hashPassword</a></li><li><a href="global.html#matchEmailInDB">matchEmailInDB</a></li><li><a href="global.html#newHelpRequest">newHelpRequest</a></li><li><a href="global.html#performSearch">performSearch</a></li><li><a href="global.html#pushLocationUpdate">pushLocationUpdate</a></li><li><a href="global.html#removeFriendRecords">removeFriendRecords</a></li><li><a href="global.html#removeUser">removeUser</a></li><li><a href="global.html#resolveAndSaveHelpRequest">resolveAndSaveHelpRequest</a></li><li><a href="global.html#resolveFriendRequest">resolveFriendRequest</a></li><li><a href="global.html#sendEmailVerificationEmail">sendEmailVerificationEmail</a></li><li><a href="global.html#setAPNToken">setAPNToken</a></li><li><a href="global.html#setEmailVerificationHash">setEmailVerificationHash</a></li><li><a href="global.html#transporter">transporter</a></li><li><a href="global.html#updateRespondentStatus">updateRespondentStatus</a></li><li><a href="global.html#userIsInFriendsArray">userIsInFriendsArray</a></li><li><a href="global.html#verifyEmail">verifyEmail</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Apr 07 2023 18:37:40 GMT+0100 (British Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

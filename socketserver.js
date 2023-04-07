@@ -5,8 +5,10 @@ const registerVictimSocketHandlers = require('./api/socketHandlers/victim.handle
 const registerRespondentSocketHandlers = require('./api/socketHandlers/respondent.handlers');
 const { HelpRequestChangeStream } = require('./server');
 
-//namespace sockets: dynamic namespace per helpReuqestID
-//socket per help request in the form of /ws/helprequests/:helpRequestID
+/**
+ * socket per help request in the form of /ws/helprequests/:helpRequestID
+ * @param {*} socket 
+ */
 exports.helpnsp = (socket) => {
 
     let helpRequestID = socket.nsp.name.split('/')[3]

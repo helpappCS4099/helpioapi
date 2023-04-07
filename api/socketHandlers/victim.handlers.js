@@ -4,6 +4,10 @@ const apnController = require('../controllers/apn.controller')
 
 module.exports = (socket) => {
 
+    /**
+     * function to resolve the help requets via socket connection
+     * @param {*} payload 
+     */
     const resolveHelpRequest = (payload) => {
         socketIsOwnerOfHelpRequest(socket, async () => {
             socket.helpRequest = await service.resolveAndSaveHelpRequest(socket.helpRequest)
@@ -25,6 +29,9 @@ module.exports = (socket) => {
     }
 
 
+    /**
+     * Socket event for resolving help request
+     */
     socket.on('helprequest: resolve', () => {
         resolveHelpRequest(socket.payload)
     })
